@@ -1,119 +1,307 @@
-Если у вендора url генерируется с пользовательскими параметрами вида:
-GET https://company.example.com/user/1
+#### Блоки
+method - метод API Endpoint вендора (PUT, POST, GET etc)
+url - ссылка или часть ссылки на API Endpoint вендора. Может быть целой ссылкой, или частичной. Тогда надо будет при создании ссылки отправлять не только валидные параметры, но и начало ссылки. Если встречаются переменные в {var}, будут заменены на значения из полученных данных. Внимание переменные {var} должны быть required и без wrapName. Заменяются только по vendorName или по name (в snake case формате). Соотв если переменная forumId, а в ссылке {forumId}, то будет ошибка, так как переменная, по умолчанию, будет forum_id. Или надо изменить {forum_id} или добавить к переменной "vendorName": "forumId"
+type - Может быть multipart/json. По умолчанию json. Используется если надо отправить мультипарт вендору.
+#### Аргументы
+wrapName - используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет:
+forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
+vendorName - имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.
+toInt - Конвертирует true/false в целочисленное представление 1/0
+complex - сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true
+keyName - имя для ключа. В примере выше это будет "type". Используется когда complex: true
+keyValue - имя для значения. В примере выше это будет "value". Используется когда complex: true
+jsonParse - парсит файл и вставляет в собранный JSON. Не знаю зачем надо.
+base64encode - закодировать содержимое файла в base64. Не знаю зачем надо.
+urlParam - параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке.
 
-Блок будет выглядеть так
-```
-"name": "copyFile",
-"description": "Get user by ID",
-"method": "GET",
-"url": "https://{company}.example.com/user/{userId}",
-"args": [
-  {
-    "name": "company",
-    "type": "String",
-    "info": "The ID of the file.",
-    "required": true
-  },
-  {
-    "name": "userId",
-    "type": "Number",
-    "info": "User ID",
-    "required": true
-  }
-```
+Первый пример (мультипарт)
+POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true
+И ожидает получить title, content, attachment
 
-Бывает что надо отправлять данные и в теле и по ссылке
-POST https://company.example.com/forum/1?safe=true
-И в теле передаем что-то вроде
 ```
 {
-  "topic": 
-  {
-    "title": "New title",
-    "someStupidName": 1
-  }
-}
-```
-Блок будет выглядеть так:
-```
-"name": "createPost",
-"description": "Create a new post",
-"method": "POST",
-"url": "https://{company}.example.com/forum/{categoryId}",
-"args": [
-  {
-    "name": "company",
-    "type": "String",
-    "info": "The ID of the file.",
-    "required": true
-  },
-  {
-    "name": "categoryId",
-    "type": "Number",
-    "info": "User ID",
-    "required": true
-  },
-  {
-    "name": "title",
-    "type": "String",
-    "info": "Title of new topic",
-    "required": true,
-    "wrapName": "topic"
-  },
-  {
-    "name": "newVariableName",
-    "type": "Boolean",
-    "info": "New name for vendor variable",
-    "required": true,
-    "vendorName": "someStupicName",
-    "wrapName": "topic",
-    "toInt": true
-  },
-  {
-    "name": "safe",
-    "type": "Boolean",
-    "info": "Variable to url",
-    "required": false,
-    "urlParam": true
-  }
-  
-```
-
-newVariableName rename to someStupidName and move deeper to topic: {}. Also true change to 1, false to 0.
-
-wrapName - category.topic.comments  превратиться в {"category": {"topic": {"comments: "value"}}}. Уровень вложенности
-vendorName - name that vendor want to get
-toInt - convert boolean to int (1 or 0)
-method - vendor Method Endpoint
-url - ссылка или часть ссылки на Endpoint
-type (binary?)
-complex - сложный параметр. Когда значение одного поля является ключ, другого - значение 
-```
-{
-"name": "facebook",
-"type": "String",
-"info": "User's facebook",
-"required": false,
-"wrapName": "user.identities",
-"complex": true,
-"keyName": "typeName",
-"keyValue": "valueName"
-}
-```
-keyName - имя для ключа
-keyValue - имя для значения
-Получим
-```
-{
-"user": 
-  {
-    "identities": {
-      "typeName": "facebook",
-      "valueName": "тут значение"
+  "name": "createNewPost",
+  "description": "Create new post",
+  "method": "POST",
+  "type": "multipart", //default json
+  "url": "https://{domain}.example.com/forum/{forumId}/category/{category_id}/newPost",
+  "args": [
+    {
+      "name": "domain",
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "forumId",
+      "type": "String",
+      "info": "",
+      "required": true,
+      "vendorName": "forumId" // always use vendorName or snake style of "name". Repace forumId, not forum_id
+    },
+    {
+      "name": "categoryId", // transform to category_id, and replace it in url
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "insertSafe",
+      "type": "Boolean",
+      "info": "Insert post safe and what ever bla-bla-bla",
+      "required": false,
+      "vendorName": "insertPostSafeAndWhatEver", //if not set, param name will be insert_safe (snake case)
+      "toInt": true, //default false
+      "urlParam": true // default false
+    },
+    {
+      "name": "draft",
+      "type": "Boolean",
+      "info": "",
+      "required": true,
+      "urlParam": true
+    },
+    {
+      "name": "title",
+      ....
+    },
+    {
+      "name": "content"
+    },
+    {
+      "name": "attachment",
+      "type": "File",
+      "info": "",
+      "required": false
     }
+  ],
+  "callbacks": [
+    {
+      "name": "error",
+      "info": "Error"
+    },
+    {
+      "name": "success",
+      "info": "Success"
+    }
+  ]
+}
+```
+
+
+Второй пример (base64)
+POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true
+И ожидает получить title, content, attachment
+
+```
+{
+  "name": "createNewPost",
+  "description": "Create new post",
+  "method": "POST",
+  "url": "https://{domain}.example.com/forum/{forumId}/category/{categoryId}/newPost",
+  "args": [
+    {
+      "name": "domain",
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "forumId",
+      "type": "String",
+      "info": "",
+      "required": true,
+      "vendorName": "forumId"
+    },
+    {
+      "name": "categoryId",
+      "type": "String",
+      "info": "",
+      "required": true,
+      "vendorName": "categoryId"
+    },
+    {
+      "name": "insertSafe",
+      "type": "Boolean",
+      "info": "Insert post safe and what ever bla-bla-bla",
+      "required": false,
+      "vendorName": "insertPostSafeAndWhatEver",
+      "toInt": true,
+      "urlParam": true
+    },
+    {
+      "name": "draft",
+      "type": "Boolean",
+      "info": "",
+      "required": true,
+      "urlParam": true
+    },
+    {
+      "name": "title",
+      ....
+    },
+    {
+      "name": "content"
+    },
+    {
+      "name": "attachment",
+      "type": "File",
+      "info": "",
+      "required": false,
+      "base64encode": true
+    }
+  ],
+  "callbacks": [
+    {
+      "name": "error",
+      "info": "Error"
+    },
+    {
+      "name": "success",
+      "info": "Success"
+    }
+  ]
+}
+```
+
+Третий пример
+POST https://your-domain-name.example.com/forum/1/category/2/newPost
+И ожидает получить JSON такого вида
+```
+{
+  "post": {
+    "title": "Post title",
+    "content": "Post content",
+    "attachment": "base64(image)"
+    "user": {
+      "name": "John Doe",
+      "contacts": [
+        {"typeContact": "email", "valueContact": "john@example.com"},
+        {"typeContact": "twitter", "valueContact": "john111"}
+      ]
+    },
+    "voting": {
+      "question": "Be or not to be?",
+      "answers": [
+        "yes",
+        "no",
+        "dont know"
+      ]
+    },
+    "other": {Object}
   }
 }
 ```
-jsonParse
-base64encode - закодировать содержимое файла в base64
-urlParam - параметр используется в ссылке. ключ=значение&ключ2=значение2
+
+```
+{
+  "name": "createNewPost",
+  "description": "Create new post",
+  "method": "POST",
+  "url": "https://{domain}.example.com/forum/{forum_id}/category/{category_id}/newPost",
+  "args": [
+    {
+      "name": "domain",
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "forumId",
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "categoryId",
+      "type": "String",
+      "info": "",
+      "required": true
+    },
+    {
+      "name": "title",
+      "type": "String",
+      "info": "",
+      "required": "",
+      "wrapName": "post"
+    },
+    {
+      "name": "content",
+      "type": "String",
+      "info": "",
+      "required": "",
+      "wrapName": "post",
+    },
+    {
+      "name": "file",
+      "type": "File",
+      "info": "",
+      "required": "",
+      "wrapName": "post",
+      "vendorName": "attachment",
+      "base64encode": true
+    },
+    {
+      "name": "userName",
+      "type": "String",
+      "info": "",
+      "required": "",
+      "vendorName": "name",
+      "wrapName": "post.user"
+    },
+    {
+      "name": "email",
+      "type": "String",
+      "info": "User contact email",
+      "required": "",
+      "wrapName": "post.user.contacts",
+      "complex": true,
+      "keyName": "typeContact",
+      "keyValue": "valueContact"
+    },
+    {
+      "name": "twitter",
+      "type": "String",
+      "info": "User contact twitter",
+      "required": "",
+      "wrapName": "post.user.contacts",
+      "complex": true,
+      "keyName": "typeContact",
+      "keyValue": "valueContact"
+    },
+    {
+      "name": "votingQuestion",
+      "type": "String",
+      "info": "",
+      "required": "",
+      "vendorName": "question",
+      "wrapName": "post.voting"
+    },
+    {
+      "name": "answers",
+      "type": "Array",
+      "info": "If send String comma separated it make array???",
+      "required": "",
+      "wrapName": "post.voting"
+    },
+    {
+      "name": "other",
+      "type": "File",
+      "info": "Data in JSON format unknown structure or cannot be translate into metadata. Example: Unknown elements"
+      "required": "",
+      "jsonParse": true
+      "wrapName": "post"
+    }
+  ],
+  "callbacks": [
+    {
+      "name": "error",
+      "info": "Error"
+    },
+    {
+      "name": "success",
+      "info": "Success"
+    }
+  ]
+}
+```
