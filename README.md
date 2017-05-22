@@ -20,7 +20,7 @@
 
 $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 
-#### Блоки
+#### Blocks
 `method` - метод API Endpoint вендора (PUT, POST, GET etc)
 
 `url` - ссылка или часть ссылки на API Endpoint вендора. Может быть целой ссылкой, или частичной. Тогда надо будет при создании ссылки отправлять не только валидные параметры, но и начало ссылки. Если встречаются переменные в {var}, будут заменены на значения из полученных данных. Внимание переменные {var} должны быть required и без wrapName. Заменяются только по vendorName или по name (в snake case формате). Соотв если переменная forumId, а в ссылке {forumId}, то будет ошибка, так как переменная, по умолчанию, будет forum_id. Или надо изменить {forum_id} или добавить к переменной "vendorName": "forumId"
@@ -29,7 +29,7 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 
 `snakeCase` - true/false. Если установлено в true, то все переменные блока, кроме тех у которых есть snakeCase == false, будут переименованы в camel_case
 
-#### Аргументы
+#### Args
 `wrapName` - используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет:
 forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
 
