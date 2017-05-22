@@ -1,10 +1,10 @@
 <?php
 
-namespace RapidAPIBundle\Service;
+namespace RapidAPI\Service;
 
 use Symfony\Component\HttpFoundation\Request;
-use RapidAPIBundle\Exception\PackageException;
-use RapidAPIBundle\Exception\RequiredFieldException;
+use RapidAPI\Exception\PackageException;
+use RapidAPI\Exception\RequiredFieldException;
 
 class DataValidator
 {

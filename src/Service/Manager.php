@@ -6,12 +6,12 @@
  * Time: 14:28
  */
 
-namespace RapidAPIBundle\Service;
+namespace RapidAPI\Service;
 
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use RapidAPIBundle\Exception\PackageException;
+use RapidAPI\Exception\PackageException;
 
 class Manager
 {

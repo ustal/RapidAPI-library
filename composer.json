@@ -1,6 +1,6 @@
 {
-  "name": "ustal/rapidapi-bundle",
-  "type": "",
+  "name": "ustal/rapidapi-library",
+  "type": "library",
   "description": "Bundle to work with the API. Validation and parsing according to the metadata",
   "keywords": [
     "RapidAPI",

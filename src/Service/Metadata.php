@@ -6,10 +6,10 @@
  * Time: 16:49
  */
 
-namespace RapidAPIBundle\Service;
+namespace RapidAPI\Service;
 
 
-use RapidAPIBundle\Exception\PackageException;
+use RapidAPI\Exception\PackageException;
 
 class Metadata
 {

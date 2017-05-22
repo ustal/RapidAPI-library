@@ -6,7 +6,7 @@
  * Time: 11:01
  */
 
-namespace RapidAPIBundle\Exception;
+namespace RapidAPI\Exception;
 
 
 class RequiredFieldException extends \Exception

@@ -6,7 +6,7 @@
  * Time: 13:56
  */
 
-namespace RapidAPIBundle\Service;
+namespace RapidAPI\Service;
 
 
 use GuzzleHttp\Client;
