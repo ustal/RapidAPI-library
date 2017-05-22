@@ -37,6 +37,8 @@ forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
 
 `toInt` - Конвертирует true/false в целочисленное представление 1/0
 
+`toString` - Конвертирует true/fase в строковые "true"/"false". Иногда вендору надо получить строками и/или, получает параметры в url. Guzzle/Client использует http_build_query, который массив query парсит и булевые значения конвертирует в int.
+
 `complex` - сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true
 
 `keyName` - имя для ключа. В примере выше это будет "type". Используется когда complex: true
