@@ -1,4 +1,4 @@
-#### Мануал
+#### Manual
 Вызываем менеджер
 `$manager = $this->get('manager');`
 
