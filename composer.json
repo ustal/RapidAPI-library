@@ -6,7 +6,7 @@
     "RapidAPI",
     "API"
   ],
-  "homepage": "https://github.com/ustal/RapidAPIBundle",
+  "homepage": "https://github.com/ustal/RapidAPI-library",
   "license": "MIT",
   "authors": [
     {
@@ -27,7 +27,7 @@
   },
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "RapidAPI": "src/"
     }
   }
 }
