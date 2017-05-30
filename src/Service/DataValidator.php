@@ -169,9 +169,14 @@ class DataValidator
     {
         if (!empty($paramData['wrapName'])) {
             $wrapNameList = explode('.', $paramData['wrapName']);
-            $this->addDepthOfNesting($this->parsedValidData, $wrapNameList, $value, $vendorName, $paramData);
+            $this->addDepthOfNesting($data, $wrapNameList, $value, $vendorName, $paramData);
         } else {
-            $data[$vendorName] = $value;
+            if (!empty($paramData['complex'])) {
+                $data[$vendorName] = $this->createComplexValue($paramData, $value, $vendorName);
+            } else {
+//                $array[$deepName][$vendorName] = $value;
+                $data[$vendorName] = $value;
+            }
         }
     }
 
@@ -184,7 +189,7 @@ class DataValidator
                 $array[$deepName] = [];
             }
             if (empty($depthNameList)) {
-                if (!empty($paramData['complex']) && filter_var($paramData['complex'], FILTER_VALIDATE_BOOLEAN) == true) {
+                if (!empty($paramData['complex'])) {
                     $array[$deepName][] = $this->createComplexValue($paramData, $value, $vendorName);
                 } else {
                     $array[$deepName][$vendorName] = $value;
@@ -253,7 +258,7 @@ class DataValidator
 
     private function setFileValue($paramData, $value, $vendorName)
     {
-        if (isset($paramData['jsonParse']) && filter_var($paramData['jsonParse'], FILTER_VALIDATE_BOOLEAN) == true) {
+        if (!empty($paramData['jsonParse'])) {
             $content = file_get_contents($value);
             $this->setJSONValue($paramData, $content, $vendorName);
         } else {
@@ -265,8 +270,8 @@ class DataValidator
                     $content = base64_encode($content);
                 }
             }
+            $this->setSingleValidData($paramData, $content, $vendorName);
         }
-        $this->setSingleValidData($paramData, $content, $vendorName);
     }
 
     private function setArrayValue($paramData, $value, $vendorName)
