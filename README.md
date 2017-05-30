@@ -51,7 +51,7 @@ forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
 
 `urlParam` - параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url
 
-`camelcase` - true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case
+`snakeCase` - true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case
 
 Первый пример (мультипарт)
 POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true
