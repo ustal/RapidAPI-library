@@ -17,19 +17,23 @@ class Metadata
     private $metaDataFull = [];
 
     /**
-     * File constructor.
+     * @param array|string $metadata
      * @throws PackageException
      */
-    public function __construct()
+    public function set($metadata)
     {
-        // todo move from RapidAPIBundle into PackageBundle and from there load metadata
-        $metaDataContent = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/metadata.json', 'r');
-        if (!$metaDataContent) {
-            throw new PackageException('Metadata not found');
+        if (is_array($metadata)) {
+            $this->metaDataFull = $metadata;
         }
-        $this->metaDataFull = json_decode($metaDataContent, true);
-        if (json_last_error()) {
-            throw new PackageException(json_last_error_msg() . '. Incorrect Metadata JSON.');
+        else {
+            $metaDataContent = file_get_contents($metadata, 'r');
+            if (!$metaDataContent) {
+                throw new PackageException('Metadata not found');
+            }
+            $this->metaDataFull = json_decode($metaDataContent, true);
+            if (json_last_error()) {
+                throw new PackageException(json_last_error_msg() . '. Incorrect Metadata JSON.');
+            }
         }
     }
 
