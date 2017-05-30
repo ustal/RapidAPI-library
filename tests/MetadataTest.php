@@ -146,10 +146,16 @@ class MetadataTest extends TestCase
           \"required\": true
         },
         {
-          \"name\": \"testComplex\",
+          \"name\": \"complexEmail\",
           \"type\": \"String\",
-          \"info\": \"Complex test\",
+          \"info\": \"Complex test 1\",
           \"required\": true
+        },
+        {
+          \"name\":\"complexTwitter\",
+          \"type\":\"String\",
+          \"info\":\"Complex test 2\",
+          \"required\":true
         },
         {
           \"name\": \"fileJson\",
@@ -279,6 +285,10 @@ class MetadataTest extends TestCase
         $data = json_decode("{
       \"name\": \"testBlock1\",
       \"description\": \"This endpoint allows to receive weather information.\",
+      \"custom\": {
+        \"method\": \"POST\",
+        \"url\": \"http:\/\/localsadad.de\"
+      },
       \"args\": [
         {
           \"name\": \"testCredentials\",

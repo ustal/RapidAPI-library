@@ -17,8 +17,10 @@
     {
       "name": "testBlock1",
       "description": "This endpoint allows to receive weather information.",
-      "method": "POST",
-      "url": "http://localsadad.de",
+      "custom": {
+        "method": "POST",
+        "url": "http://localsadad.de"
+      },
       "args": [
         {
           "name": "testCredentials",
@@ -107,80 +109,100 @@
     {
       "name": "testBlock2",
       "description": "This endpoint allows to receive weather information.",
-      "method": "POST",
-      "url": "http://localhost",
-      "snakeCase": true,
+      "custom": {
+        "method": "POST",
+        "url": "http://localhost",
+        "snakeCase": true
+      },
       "args": [
         {
           "name": "testCredentials",
           "type": "credentials",
           "info": "test credentials info",
           "required": true,
-          "wrapName": "test",
-          "vendorName": "VENDOR_NAME"
+          "custom": {
+            "wrapName": "test",
+            "vendorName": "VENDOR_NAME"
+          }
         },
         {
           "name": "testString",
           "type": "String",
           "info": "test string info",
           "required": true,
-          "snakeCase": true
+          "custom": {
+            "snakeCase": true
+          }
         },
         {
           "name": "complexEmail",
           "type": "String",
           "info": "Complex test 1",
           "required": true,
-          "complex": true,
-          "keyName": "vendorKey",
-          "valueName": "vendorValue",
-          "wrapName": "contacts"
+          "custom": {
+            "complex": true,
+            "keyName": "vendorKey",
+            "valueName": "vendorValue",
+            "wrapName": "contacts"
+          }
         },
         {
           "name": "complexTwitter",
           "type": "String",
           "info": "Complex test 2",
           "required": true,
-          "complex": true,
-          "keyName": "vendorKey",
-          "valueName": "vendorValue",
-          "wrapName": "contacts",
-          "snakeCase": false
+          "custom": {
+            "complex": true,
+            "keyName": "vendorKey",
+            "valueName": "vendorValue",
+            "wrapName": "contacts",
+            "snakeCase": false
+          }
         },
         {
           "name": "fileJson",
           "type": "File",
           "info": "content file to json",
           "required": true,
-          "jsonParse": true
+          "custom": {
+            "jsonParse": true
+          }
         },
         {
           "name": "fileBase64",
           "type": "File",
           "info": "content to base64",
           "required": true,
-          "base64encode": true
+          "custom": {
+            "base64encode": true
+          }
         },
         {
           "name": "testNumber",
           "type": "Number",
           "info": "test number info",
           "required": true,
-          "snakeCase": false
+          "custom": {
+            "snakeCase": false
+          }
         },
         {
           "name": "testBoolean",
           "type": "Boolean",
           "info": "test boolean info to int",
           "required": true,
-          "toInt": true
+          "custom": {
+            "toInt": true
+          }
         },
         {
           "name": "testBoolean2",
           "type": "Boolean",
           "info": "to string",
           "required": true,
-          "toString": true
+          "custom": {
+            "toString": true
+          }
         },
         {
           "name": "testMap",
@@ -245,23 +267,21 @@
     {
       "name": "testBlock3",
       "description": "",
-      "method": "POST",
-      "url": "http://localhost",
-      "type": "multipart",
-      "snakeCase": true,
+      "custom": {
+        "method": "POST",
+        "url": "http://localhost",
+        "type": "multipart",
+        "snakeCase": true
+      },
       "args": [
-        {
-          "name": "file",
-          "type": "file",
-          "info": "file as multipart",
-          "required": true
-        },
         {
           "name": "draft",
           "type": "Boolean",
           "info": "url param",
           "required": true,
-          "urlParam": true
+          "custom": {
+            "urlParam": true
+          }
         }
       ],
       "callbacks": [

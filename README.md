@@ -20,6 +20,9 @@
 
 $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 
+
+###Кастомные теги используются только в переменной ```"custom"``` блока или переменной
+
 #### Blocks
 `method` - метод API Endpoint вендора (PUT, POST, GET etc)
 
@@ -61,9 +64,11 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
 {
   "name": "createNewPost",
   "description": "Create new post",
-  "method": "POST",
-  "type": "multipart", //default json
-  "url": "https://{domain}.example.com/forum/{forumId}/category/{category_id}/newPost",
+  "custom": {
+    "method": "POST",
+    "type": "multipart", //default json
+    "url": "https://{domain}.example.com/forum/{forumId}/category/{category_id}/newPost"
+  },
   "args": [
     {
       "name": "domain",
@@ -76,7 +81,9 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
       "type": "String",
       "info": "",
       "required": true,
-      "vendorName": "forumId" // always use vendorName or snake style of "name". Repace forumId, not forum_id
+      "custom": {
+        "vendorName": "forumId" // always use vendorName or snake style of "name". Repace forumId, not forum_id
+      }
     },
     {
       "name": "categoryId", // transform to category_id, and replace it in url
@@ -89,16 +96,20 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
       "type": "Boolean",
       "info": "Insert post safe and what ever bla-bla-bla",
       "required": false,
-      "vendorName": "insertPostSafeAndWhatEver", //if not set, param name will be insert_safe (snake case)
-      "toInt": true, //default false
-      "urlParam": true // default false
+      "custom": {
+        "vendorName": "insertPostSafeAndWhatEver", //if not set, param name will be insert_safe (snake case)
+        "toInt": true, //default false
+        "urlParam": true // default false
+      }
     },
     {
       "name": "draft",
       "type": "Boolean",
       "info": "",
       "required": true,
-      "urlParam": true
+      "custom": {
+        "urlParam": true
+      }
     },
     {
       "name": "title",
@@ -136,8 +147,10 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
 {
   "name": "createNewPost",
   "description": "Create new post",
-  "method": "POST",
-  "url": "https://{domain}.example.com/forum/{forumId}/category/{categoryId}/newPost",
+  "custom": {
+    "method": "POST",
+    "url": "https://{domain}.example.com/forum/{forumId}/category/{categoryId}/newPost"
+  },
   "args": [
     {
       "name": "domain",
@@ -150,30 +163,38 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
       "type": "String",
       "info": "",
       "required": true,
-      "vendorName": "forumId"
+      "custom": {
+        "vendorName": "forumId"
+      }
     },
     {
       "name": "categoryId",
       "type": "String",
       "info": "",
       "required": true,
-      "vendorName": "categoryId"
+      "custom": {
+        "vendorName": "categoryId"
+      }
     },
     {
       "name": "insertSafe",
       "type": "Boolean",
       "info": "Insert post safe and what ever bla-bla-bla",
       "required": false,
-      "vendorName": "insertPostSafeAndWhatEver",
-      "toInt": true,
-      "urlParam": true
+      "custom": {
+        "vendorName": "insertPostSafeAndWhatEver",
+        "toInt": true,
+        "urlParam": true
+      }
     },
     {
       "name": "draft",
       "type": "Boolean",
       "info": "",
       "required": true,
-      "urlParam": true
+      "custom": {
+        "urlParam": true
+      }
     },
     {
       "name": "title",
@@ -187,7 +208,9 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostS
       "type": "File",
       "info": "",
       "required": false,
-      "base64encode": true
+      "custom": {
+        "base64encode": true
+      }
     }
   ],
   "callbacks": [
@@ -236,8 +259,10 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost
 {
   "name": "createNewPost",
   "description": "Create new post",
-  "method": "POST",
-  "url": "https://{domain}.example.com/forum/{forum_id}/category/{category_id}/newPost",
+  "custom": {
+    "method": "POST",
+    "url": "https://{domain}.example.com/forum/{forum_id}/category/{category_id}/newPost"
+  }
   "args": [
     {
       "name": "domain",
@@ -262,74 +287,92 @@ POST https://your-domain-name.example.com/forum/1/category/2/newPost
       "type": "String",
       "info": "",
       "required": "",
-      "wrapName": "post"
+      "custom": {
+        "wrapName": "post"
+      }
     },
     {
       "name": "content",
       "type": "String",
       "info": "",
       "required": "",
-      "wrapName": "post",
+      "custom": {
+        "wrapName": "post"
+      }
     },
     {
       "name": "file",
       "type": "File",
       "info": "",
       "required": "",
-      "wrapName": "post",
-      "vendorName": "attachment",
-      "base64encode": true
+      "custom": {
+        "wrapName": "post",
+        "vendorName": "attachment",
+        "base64encode": true
+      }
     },
     {
       "name": "userName",
       "type": "String",
       "info": "",
       "required": "",
-      "vendorName": "name",
-      "wrapName": "post.user"
+      "custom": {
+        "vendorName": "name",
+        "wrapName": "post.user"
+      }
     },
     {
       "name": "email",
       "type": "String",
       "info": "User contact email",
       "required": "",
-      "wrapName": "post.user.contacts",
-      "complex": true,
-      "keyName": "typeContact",
-      "keyValue": "valueContact"
+      "custom": {
+        "wrapName": "post.user.contacts",
+        "complex": true,
+        "keyName": "typeContact",
+        "valueName": "valueContact"
+      }
     },
     {
       "name": "twitter",
       "type": "String",
       "info": "User contact twitter",
       "required": "",
-      "wrapName": "post.user.contacts",
-      "complex": true,
-      "keyName": "typeContact",
-      "keyValue": "valueContact"
+      "custom": {
+        "wrapName": "post.user.contacts",
+        "complex": true,
+        "keyName": "typeContact",
+        "valueName": "valueContact"
+      }
     },
     {
       "name": "votingQuestion",
       "type": "String",
       "info": "",
       "required": "",
-      "vendorName": "question",
-      "wrapName": "post.voting"
+      "custom": {
+        "vendorName": "question",
+        "wrapName": "post.voting"
+      }
     },
     {
       "name": "answers",
       "type": "Array",
       "info": "If send String comma separated it make array???",
       "required": "",
-      "wrapName": "post.voting"
+      "custom": {
+        "wrapName": "post.voting"
+      }
     },
     {
       "name": "other",
       "type": "File",
       "info": "Data in JSON format unknown structure or cannot be translate into metadata. Example: Unknown elements"
       "required": "",
-      "jsonParse": true
-      "wrapName": "post"
+      "custom": {
+        "jsonParse": true
+        "wrapName": "post"
+      }
     }
   ],
   "callbacks": [

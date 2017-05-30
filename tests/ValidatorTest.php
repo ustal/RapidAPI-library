@@ -201,6 +201,19 @@ class ValidatorTest extends TestCase
                 "expectUrl" => [
 
                 ]
+            ],
+            [
+                "blockName" => "testBlock3",
+                "request" => [
+                    "args" => [
+                        "draft" => true
+                    ]
+                ],
+                "expectBody" => [
+                ],
+                "expectUrl" => [
+                    "draft" =>  true
+                ]
             ]
         ];
     }

@@ -44,21 +44,23 @@ class Metadata
     {
         $result = $this->metaDataFull;
         foreach ($result['blocks'] as &$block) {
-            unset($block['method'], $block['url'], $block['type'], $block['snakeCase']);
+//            unset($block['method'], $block['url'], $block['type'], $block['snakeCase']);
+            unset($block['custom']);
             foreach ($block['args'] as &$param) {
-                unset(
-                    $param['wrapName'],
-                    $param['complex'],
-                    $param['keyName'],
-                    $param['valueName'],
-                    $param['jsonParse'],
-                    $param['base64encode'],
-                    $param['toInt'],
-                    $param['toString'],
-                    $param['urlParam'],
-                    $param['snakeCase'],
-                    $param['vendorName']
-                );
+                unset($param['custom']);
+//                unset(
+//                    $param['wrapName'],
+//                    $param['complex'],
+//                    $param['keyName'],
+//                    $param['valueName'],
+//                    $param['jsonParse'],
+//                    $param['base64encode'],
+//                    $param['toInt'],
+//                    $param['toString'],
+//                    $param['urlParam'],
+//                    $param['snakeCase'],
+//                    $param['vendorName']
+//                );
             }
         }
 

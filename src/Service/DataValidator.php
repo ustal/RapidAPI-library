@@ -158,7 +158,7 @@ class DataValidator
 //        } else {
 //            $this->parsedValidData[$vendorName] = $value;
 //        }
-        if (!empty($paramData['urlParam'])) {
+        if (!empty($paramData['custom']['urlParam'])) {
             $this->setSingleValidVariable($this->urlParams, $value, $vendorName, $paramData);
         } else {
             $this->setSingleValidVariable($this->bodyParams, $value, $vendorName, $paramData);
@@ -167,11 +167,11 @@ class DataValidator
 
     private function setSingleValidVariable(&$data, $value, $vendorName, $paramData)
     {
-        if (!empty($paramData['wrapName'])) {
-            $wrapNameList = explode('.', $paramData['wrapName']);
+        if (!empty($paramData['custom']['wrapName'])) {
+            $wrapNameList = explode('.', $paramData['custom']['wrapName']);
             $this->addDepthOfNesting($data, $wrapNameList, $value, $vendorName, $paramData);
         } else {
-            if (!empty($paramData['complex'])) {
+            if (!empty($paramData['custom']['complex'])) {
                 $data[$vendorName] = $this->createComplexValue($paramData, $value, $vendorName);
             } else {
 //                $array[$deepName][$vendorName] = $value;
@@ -189,7 +189,7 @@ class DataValidator
                 $array[$deepName] = [];
             }
             if (empty($depthNameList)) {
-                if (!empty($paramData['complex'])) {
+                if (!empty($paramData['custom']['complex'])) {
                     $array[$deepName][] = $this->createComplexValue($paramData, $value, $vendorName);
                 } else {
                     $array[$deepName][$vendorName] = $value;
@@ -204,8 +204,8 @@ class DataValidator
     private function createComplexValue($paramData, $value, $vendorName)
     {
         return [
-            $paramData['keyName'] => $vendorName,
-            $paramData['valueName'] => $value
+            $paramData['custom']['keyName'] => $vendorName,
+            $paramData['custom']['valueName'] => $value
         ];
     }
 
@@ -216,8 +216,8 @@ class DataValidator
      */
     private function getParamVendorName(array $paramData): string
     {
-        if (!empty($paramData['vendorName'])) {
-            return $paramData['vendorName'];
+        if (!empty($paramData['custom']['vendorName'])) {
+            return $paramData['custom']['vendorName'];
         } else {
             if ($this->toSnakeCase($paramData)) {
                 return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $paramData['name']));
@@ -230,11 +230,11 @@ class DataValidator
     private function toSnakeCase(array $paramData): bool
     {
         $result = false;
-        if (isset($paramData['snakeCase'])) {
-            $result = $paramData['snakeCase'];
+        if (isset($paramData['custom']['snakeCase'])) {
+            $result = $paramData['custom']['snakeCase'];
         } else {
-            if (isset($this->blockMetadata['snakeCase'])) {
-                $result = $this->blockMetadata['snakeCase'];
+            if (isset($this->blockMetadata['custom']['snakeCase'])) {
+                $result = $this->blockMetadata['custom']['snakeCase'];
             }
         }
 
@@ -258,15 +258,15 @@ class DataValidator
 
     private function setFileValue($paramData, $value, $vendorName)
     {
-        if (!empty($paramData['jsonParse'])) {
+        if (!empty($paramData['custom']['jsonParse'])) {
             $content = file_get_contents($value);
             $this->setJSONValue($paramData, $content, $vendorName);
         } else {
-            if (isset($this->blockMetadata['type']) && $this->blockMetadata['type'] == 'multipart') {
+            if (isset($this->blockMetadata['custom']['type']) && $this->blockMetadata['custom']['type'] == 'multipart') {
                 $content = fopen($value, 'r');
             } else {
                 $content = file_get_contents($value);
-                if (isset($paramData['base64encode']) && filter_var($paramData['base64encode'], FILTER_VALIDATE_BOOLEAN) == true) {
+                if (isset($paramData['custom']['base64encode']) && filter_var($paramData['custom']['base64encode'], FILTER_VALIDATE_BOOLEAN) == true) {
                     $content = base64_encode($content);
                 }
             }
@@ -276,7 +276,7 @@ class DataValidator
 
     private function setArrayValue($paramData, $value, $vendorName)
     {
-        if (mb_strtolower($this->blockMetadata['method']) == 'get') {
+        if (mb_strtolower($this->blockMetadata['custom']['method']) == 'get') {
             $data = is_array($value) ? implode(',', $value) : $value;
             $this->setSingleValidData($paramData, $data, $vendorName);
         } else {
@@ -288,10 +288,10 @@ class DataValidator
     private function setBooleanValue($paramData, $value, $vendorName)
     {
         $data = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-        if (!empty($paramData['toInt']) && filter_var($paramData['toInt'], FILTER_VALIDATE_BOOLEAN) == true) {
+        if (!empty($paramData['custom']['toInt'])) {
             $data = (int) $data;
         }
-        if (!empty($paramData['toString'])) {
+        if (!empty($paramData['custom']['toString'])) {
             $data = $data ? "true": "false";
         }
         $this->setSingleValidData($paramData, $data, $vendorName);
@@ -305,10 +305,10 @@ class DataValidator
 
     private function checkBlockMetadata()
     {
-        if (!isset($this->blockMetadata['url'])) {
+        if (!isset($this->blockMetadata['custom']['url'])) {
             throw new PackageException("Cant find part of vendor's endpoint");
         }
-        if (!isset($this->blockMetadata['method'])) {
+        if (!isset($this->blockMetadata['custom']['method'])) {
             throw new PackageException("Cant find method of vendor's endpoint");
         }
     }
@@ -360,7 +360,7 @@ class DataValidator
     {
         // todo refactor
         $formParamsFlag = false;
-        $method = mb_strtoupper($this->blockMetadata['method']);
+        $method = mb_strtoupper($this->blockMetadata['custom']['method']);
         $result = [];
         $result['headers'] = $headers;
         $result['method'] = $method;
@@ -382,8 +382,8 @@ class DataValidator
             if ($formParamsFlag) {
                 $result['form_params'] = $params;
             } else {
-                if (isset($this->blockMetadata['type'])) {
-                    $type = mb_strtoupper($this->blockMetadata['type']);
+                if (isset($this->blockMetadata['custom']['type'])) {
+                    $type = mb_strtoupper($this->blockMetadata['custom']['type']);
                 } else {
                     $type = 'JSON';
                 }
