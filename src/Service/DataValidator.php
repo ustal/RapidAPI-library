@@ -2,7 +2,6 @@
 
 namespace RapidAPI\Service;
 
-use Symfony\Component\HttpFoundation\Request;
 use RapidAPI\Exception\PackageException;
 use RapidAPI\Exception\RequiredFieldException;
 
@@ -17,9 +16,6 @@ class DataValidator
     /** @var array */
     private $parsedFieldError = [];
 
-    /** @var Request */
-    private $request;
-
     /** @var array */
     private $dataFromRequest = [];
 
@@ -33,15 +29,14 @@ class DataValidator
     private $bodyParams = [];
 
     /**
-     * @param Request $request
-     * @param array   $blockMetadata
+     * @param $dataFromRequest
+     * @param $blockMetadata
      */
-    public function setData(Request $request, $blockMetadata)
+    public function setData($dataFromRequest, $blockMetadata)
     {
-        $this->request = $request;
         $this->blockMetadata = $blockMetadata;
-        $this->setDataFromRequest();
-        $this->parseDataFromRequest();
+        $this->dataFromRequest = $dataFromRequest;
+        $this->parseData();
         $this->checkBlockMetadata();
     }
 
@@ -53,11 +48,17 @@ class DataValidator
         return $this->parsedValidData;
     }
 
-    public function getBlockMetadata()
+    /**
+     * @return array
+     */
+    public function getBlockMetadata(): array
     {
         return $this->blockMetadata;
     }
 
+    /**
+     * @return array
+     */
     public function getUrlParams(): array
     {
         return $this->urlParams;
@@ -68,7 +69,7 @@ class DataValidator
         return $this->bodyParams;
     }
 
-    private function parseDataFromRequest()
+    private function parseData()
     {
         foreach ($this->blockMetadata['args'] as $paramData) {
             if ($paramData['required'] == true) {
@@ -233,22 +234,6 @@ class DataValidator
         }
 
         return $result;
-    }
-
-    /**
-     * @throws PackageException
-     */
-    private function setDataFromRequest()
-    {
-        $jsonContent = $this->request->getContent();
-        if (empty($jsonContent)) {
-            $this->dataFromRequest = $this->request->request->all();
-        } else {
-            $this->dataFromRequest = json_decode($jsonContent, true);
-            if (json_last_error() != 0) {
-                throw new PackageException(json_last_error_msg() . '. Incorrect input JSON. Please, check fields with JSON input.');
-            }
-        }
     }
 
     private function setJSONValue($paramData, $value, $vendorName)
