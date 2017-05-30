@@ -43,7 +43,7 @@ forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
 
 `keyName` - имя для ключа. В примере выше это будет "type". Используется когда complex: true
 
-`keyValue` - имя для значения. В примере выше это будет "value". Используется когда complex: true
+`valueName` - имя для значения. В примере выше это будет "value". Используется когда complex: true
 
 `jsonParse` - парсит файл и вставляет в собранный JSON. Не знаю зачем надо.
 

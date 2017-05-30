@@ -50,7 +50,7 @@ class Metadata
                     $param['wrapName'],
                     $param['complex'],
                     $param['keyName'],
-                    $param['keyValue'],
+                    $param['valueName'],
                     $param['jsonParse'],
                     $param['base64encode'],
                     $param['toInt'],

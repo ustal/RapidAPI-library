@@ -205,7 +205,7 @@ class DataValidator
     {
         return [
             $paramData['keyName'] => $vendorName,
-            $paramData['keyValue'] => $value
+            $paramData['valueName'] => $value
         ];
     }
 
