@@ -87,7 +87,7 @@ class DataValidator
             throw new RequiredFieldException(implode(',', $this->requiredFieldError));
         }
         if (!empty($this->parsedFieldError)) {
-            throw new PackageException("Parse error in: " . implode(',', $this->parsedFieldError));
+            throw new PackageException("Parse error in: " . implode(',', $this->parsedFieldError), PackageException::JSON_VALIDATION_CODE);
         }
     }
 
@@ -306,10 +306,10 @@ class DataValidator
     private function checkBlockMetadata()
     {
         if (!isset($this->blockMetadata['custom']['url'])) {
-            throw new PackageException("Cant find part of vendor's endpoint");
+            throw new PackageException("Cant find vendor's endpoint", PackageException::URL_CODE);
         }
         if (!isset($this->blockMetadata['custom']['method'])) {
-            throw new PackageException("Cant find method of vendor's endpoint");
+            throw new PackageException("Cant find method of vendor's endpoint", PackageException::METHOD_CODE);
         }
     }
 

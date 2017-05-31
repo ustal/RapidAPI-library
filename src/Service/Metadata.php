@@ -79,6 +79,6 @@ class Metadata
                 return $block;
             }
         }
-        throw new PackageException("Not found description in metadata for current block");
+        throw new PackageException("Not found description in metadata for current block", PackageException::BLOCK_NOT_EXIST_CODE);
     }
 }
