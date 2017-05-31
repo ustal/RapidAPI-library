@@ -294,6 +294,66 @@
           "info": "Success"
         }
       ]
+    },
+    {
+      "name": "testMethodException",
+      "description": "",
+      "custom": {
+        "url": "http://localhost",
+        "type": "multipart",
+        "snakeCase": true
+      },
+      "args": [
+        {
+          "name": "draft",
+          "type": "Boolean",
+          "info": "url param",
+          "required": true,
+          "custom": {
+            "urlParam": true
+          }
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "testUrlException",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "type": "multipart",
+        "snakeCase": true
+      },
+      "args": [
+        {
+          "name": "draft",
+          "type": "Boolean",
+          "info": "url param",
+          "required": true,
+          "custom": {
+            "urlParam": true
+          }
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
     }
   ]
 }
