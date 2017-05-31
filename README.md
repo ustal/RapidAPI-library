@@ -21,40 +21,30 @@
 $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 
 
-###Кастомные теги используются только в переменной ```"custom"``` блока или переменной
+### Custom tags use only in assoc array with `"custom"` key variable of block and block's arguments. 
 
 #### Blocks
-`method` - метод API Endpoint вендора (PUT, POST, GET etc)
-
-`url` - ссылка или часть ссылки на API Endpoint вендора. Может быть целой ссылкой, или частичной. Тогда надо будет при создании ссылки отправлять не только валидные параметры, но и начало ссылки. Если встречаются переменные в {var}, будут заменены на значения из полученных данных. Внимание переменные {var} должны быть required и без wrapName. Заменяются только по vendorName или по name (в snake case формате). Соотв если переменная forumId, а в ссылке {forumId}, то будет ошибка, так как переменная, по умолчанию, будет forum_id. Или надо изменить {forum_id} или добавить к переменной "vendorName": "forumId"
-
-`type` - Может быть multipart/json. По умолчанию json. Используется если надо отправить мультипарт вендору.
-
-`snakeCase` - true/false. Если установлено в true, то все переменные блока, кроме тех у которых есть snakeCase == false, будут переименованы в camel_case
+| TagName   | Type    | Description |
+|-----------|---------|-------------|
+| method*   | String  | One of `PUT`, `POST`, `GET`, `DELETE`, `PATCH` etc|
+| url*      | String  | Second part of endpoint `/endpointName/action` or whole endpoint `http://example/com/api/v1/endpointName/action` can contain {var}, which will be replaced args by name (in case) or vendorName. Args to replace must be without `wrapName` tag|
+| type      | String  | `multipart` or `json`. Default: json|
+| snakeCase | Boolean | True if you want to change all name from `exampleVendorName` to `example_vendor_name`. Priority is given to same tag of args. Default: false|
 
 #### Args
-`wrapName` - используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет:
-forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}
-
-`vendorName` - имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.
-
-`toInt` - Конвертирует true/false в целочисленное представление 1/0
-
-`toString` - Конвертирует true/fase в строковые "true"/"false". Иногда вендору надо получить строками и/или, получает параметры в url. Guzzle/Client использует http_build_query, который массив query парсит и булевые значения конвертирует в int.
-
-`complex` - сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true
-
-`keyName` - имя для ключа. В примере выше это будет "type". Используется когда complex: true
-
-`valueName` - имя для значения. В примере выше это будет "value". Используется когда complex: true
-
-`jsonParse` - парсит файл и вставляет в собранный JSON. Не знаю зачем надо.
-
-`base64encode` - закодировать содержимое файла в base64. Не знаю зачем надо.
-
-`urlParam` - параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url
-
-`snakeCase` - true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case
+| TagName      | Type    | Description |
+|--------------|---------|-------------|
+| wrapName     | String  | используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет: forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}|
+| vendorName   | String  | имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.|
+| toInt        | Boolean | Конвертирует true/false в целочисленное представление 1/0|
+| toString     | Boolean | Конвертирует true/fase в строковые "true"/"false". Иногда вендору надо получить строками и/или, получает параметры в url. Guzzle/Client использует http_build_query, который массив query парсит и булевые значения конвертирует в int.|
+| complex      | Boolean | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
+| keyName      | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
+| valueName    | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+| jsonParse    | Boolean | парсит файл и вставляет в собранный JSON. Не знаю зачем надо.|
+| base64encode | Boolean | закодировать содержимое файла в base64. Не знаю зачем надо.|
+| urlParam     | Boolean | параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url|
+| snakeCase    | Boolean | true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case|
 
 Первый пример (мультипарт)
 POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true
