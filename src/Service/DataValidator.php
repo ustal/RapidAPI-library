@@ -152,12 +152,6 @@ class DataValidator
 
     private function setSingleValidData($paramData, $value, $vendorName)
     {
-//        if (!empty($paramData['wrapName'])) {
-//            $wrapNameList = explode('.', $paramData['wrapName']);
-//            $this->addDepthOfNesting($this->parsedValidData, $wrapNameList, $value, $vendorName, $paramData);
-//        } else {
-//            $this->parsedValidData[$vendorName] = $value;
-//        }
         if (!empty($paramData['custom']['urlParam'])) {
             $this->setSingleValidVariable($this->urlParams, $value, $vendorName, $paramData);
         } else {
@@ -174,7 +168,6 @@ class DataValidator
             if (!empty($paramData['custom']['complex'])) {
                 $data[$vendorName] = $this->createComplexValue($paramData, $value, $vendorName);
             } else {
-//                $array[$deepName][$vendorName] = $value;
                 $data[$vendorName] = $value;
             }
         }
