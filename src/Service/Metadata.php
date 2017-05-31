@@ -23,17 +23,10 @@ class Metadata
     public function set($metadata)
     {
         if (is_array($metadata)) {
-            $this->metaDataFull = $metadata;
+            $this->setMetadata($metadata);
         }
         else {
-            $metaDataContent = file_get_contents($metadata, 'r');
-            if (!$metaDataContent) {
-                throw new PackageException('Metadata not found');
-            }
-            $this->metaDataFull = json_decode($metaDataContent, true);
-            if (json_last_error()) {
-                throw new PackageException(json_last_error_msg() . '. Incorrect Metadata JSON.');
-            }
+            $this->setMetadataFromFile($metadata);
         }
     }
 
@@ -66,5 +59,21 @@ class Metadata
             }
         }
         throw new PackageException("Not found description in metadata for current block", PackageException::BLOCK_NOT_EXIST_CODE);
+    }
+
+    private function setMetadataFromFile($file) {
+        $metadataStr = file_get_contents($file, 'r');
+        if (!$metadataStr) {
+            throw new PackageException('Metadata not found');
+        }
+        $metadata = json_decode($metadataStr, true);
+        if (json_last_error()) {
+            throw new PackageException(json_last_error_msg() . '. Incorrect Metadata JSON.', PackageException::JSON_VALIDATION_CODE);
+        }
+        $this->setMetadata($metadata);
+    }
+
+    private function setMetadata($metadata) {
+        $this->metaDataFull = $metadata;
     }
 }
