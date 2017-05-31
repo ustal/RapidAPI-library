@@ -11,7 +11,14 @@ namespace RapidAPI\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class GeneratorTest
+ * @package RapidAPI\Tests
+ * @
+ */
 class GeneratorTest extends TestCase
 {
-
+    public function test() {
+        $this->markTestSkipped("Generator Service is not exist yet");
+    }
 }
