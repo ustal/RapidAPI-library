@@ -280,6 +280,8 @@ class DataValidator
 
     private function setBooleanValue($paramData, $value, $vendorName)
     {
+        // todo check if value == "", " ", "false", "0", "true", null, "null"
+        // todo check if param is Required!!!
         $data = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         if (!empty($paramData['custom']['toInt'])) {
             $data = (int) $data;
