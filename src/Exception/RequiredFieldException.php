@@ -11,4 +11,5 @@ namespace RapidAPI\Exception;
 
 class RequiredFieldException extends \Exception
 {
+    const GROUP_VALIDATION_FAIL = 1;
 }
