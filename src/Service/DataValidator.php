@@ -28,6 +28,9 @@ class DataValidator
     /** @var array */
     private $bodyParams = [];
 
+    /** @var array */
+    private $groupError = [];
+
     /**
      * @param $dataFromRequest
      * @param $blockMetadata
@@ -36,8 +39,58 @@ class DataValidator
     {
         $this->blockMetadata = $blockMetadata;
         $this->dataFromRequest = $dataFromRequest;
+        $this->checkGroups();
         $this->parseData();
         $this->checkBlockMetadata();
+    }
+
+    private function checkGroups()
+    {
+        if (!empty($this->blockMetadata['custom']['groups'])) {
+            foreach ($this->blockMetadata['custom']['groups'] as $group) {
+                $result = $this->test($group);
+                if (!$result) {
+                    $this->groupError[] = $group;
+                }
+            }
+        }
+    }
+
+    private function test($group)
+    {
+        $result = $group['required'] == "all" ? true : false;
+        foreach ($group['args'] as $arg) {
+            if (is_array($arg)) {
+                $result = $this->test($arg);
+            } else {
+                $test = $this->isNotEmptyParamByName($arg);
+                if ($group['required'] == "all") {
+                    $result = $result && $test;
+                } else {
+                    $result = $result || $test;
+                    if ($result == true) {
+                        break;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    private function isNotEmptyParamByName($paramName)
+    {
+        $paramData = $this->findInArgs($paramName);
+        return $this->checkNotEmptyParam($paramData);
+    }
+
+    private function findInArgs($paramName)
+    {
+        foreach ($this->blockMetadata['args'] as $arg) {
+            if ($arg['name'] == $paramName) {
+                return $arg;
+            }
+        }
+        return [];
     }
 
     /**
@@ -89,6 +142,42 @@ class DataValidator
         if (!empty($this->parsedFieldError)) {
             throw new PackageException("Parse error in: " . implode(',', $this->parsedFieldError), PackageException::JSON_VALIDATION_CODE);
         }
+        if (!empty($this->groupError)) {
+            $message = "Follow group validation rules: ";
+            foreach ($this->groupError as $group) {
+                $glue = $group['required'] == "all" ? " AND " : " OR ";
+                $message .= $this->createGroupErrorMessage($group, $glue);
+            }
+            throw new RequiredFieldException($message, RequiredFieldException::GROUP_VALIDATION_FAIL);
+        }
+    }
+
+    private function createGroupErrorMessage($group, $glue)
+    {
+        $message = '';
+        if (!$this->isMultiDimensionalArray($group['args'])) {
+            $message .= implode($glue, $group['args']);
+        }
+        else {
+            foreach ($group['args'] as $arg) {
+                if (!is_array($arg)) {
+                    $message .= $arg . $glue;
+                } else {
+                    $glue = $arg['required'] == "all" ? " AND " : " OR ";
+                    $message .= "(" . $this->createGroupErrorMessage($arg, $glue) . ")";
+                }
+            }
+        }
+        return $message;
+    }
+
+    private function isMultiDimensionalArray($array) {
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function parseRequiredDataFromRequest($paramData)
@@ -110,7 +199,7 @@ class DataValidator
                 return true;
             }
         } else {
-            if ($value != "") {
+            if ($value !== "" && $value !== null) {
                 // true, false, 1, 0, "asd", "true", "false"
                 return true;
             }
@@ -125,6 +214,7 @@ class DataValidator
         $type = mb_strtolower($paramData['type']);
         $value = $this->getValueFromRequestData($name);
         // todo fix double checking required params!
+        // todo maybe check if value is not null ?
         if ($this->checkNotEmptyParam($paramData)) {
             // todo add new metadata param "nullable" => true (default false) to send "" or "0" param
             switch ($type) {
@@ -280,14 +370,12 @@ class DataValidator
 
     private function setBooleanValue($paramData, $value, $vendorName)
     {
-        // todo check if value == "", " ", "false", "0", "true", null, "null"
-        // todo check if param is Required!!!
         $data = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         if (!empty($paramData['custom']['toInt'])) {
             $data = (int) $data;
         }
         if (!empty($paramData['custom']['toString'])) {
-            $data = $data ? "true": "false";
+            $data = $data ? "true" : "false";
         }
         $this->setSingleValidData($paramData, $data, $vendorName);
     }

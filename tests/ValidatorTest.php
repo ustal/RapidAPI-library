@@ -8,7 +8,6 @@
 
 namespace RapidAPI\Tests;
 
-
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\DataValidator;
 use RapidAPI\Service\Metadata;
@@ -49,42 +48,63 @@ class ValidatorTest extends TestCase
         $this->assertTrue($urlParam == $expectUrl);
     }
 
-    /**
-     * @expectedException \RapidAPI\Exception\PackageException
-     * @expectedExceptionMessage Not found description in metadata for current block
-     * @expectedExceptionCode \RapidAPI\Exception\PackageException::BLOCK_NOT_EXIST_CODE
-     */
-    public function testPackageException()
-    {
-        $this->validator->setData([], $this->metadata->getBlockData('NonExist'));
-    }
+
 
     /**
-     * @expectedException \RapidAPI\Exception\RequiredFieldException
-     * @expectedExceptionMessage draft
+     * @dataProvider dataProviderBoolean
+     * @param $blockName
+     * @param $data
+     * @param $expectBody
+     * @param $expectUrl
      */
-    public function testRequiredFieldException()
-    {
-        $this->validator->setData([], $this->metadata->getBlockData('testMethodException'));
+    public function testBoolean($blockName, $data, $expectBody, $expectUrl) {$this->validator->setData($data, $this->metadata->getBlockData($blockName));
+        $bodyParam = $this->validator->getBodyParams();
+        $urlParam = $this->validator->getUrlParams();
+        $this->assertTrue($bodyParam == $expectBody);
+        $this->assertTrue($urlParam == $expectUrl);
     }
 
-    /**
-     * @expectedException \RapidAPI\Exception\PackageException
-     * @expectedExceptionMessage Cant find method of vendor's endpoint
-     * @expectedExceptionCode \RapidAPI\Exception\PackageException::METHOD_CODE
-     */
-    public function testEmptyMethodException()
-    {
-        $this->validator->setData(["args" => ["draft" => true]], $this->metadata->getBlockData('testMethodException'));
-    }
-
-    /**
-     * @expectedException \RapidAPI\Exception\PackageException
-     * @expectedExceptionMessage Cant find vendor's endpoint
-     */
-    public function testEmptyUrlException()
-    {
-        $this->validator->setData(["args" => ["draft" => true]], $this->metadata->getBlockData('testUrlException'));
+    public function dataProviderBoolean() {
+        return [
+            [
+                "blockName" => "testBoolean",
+                "request" => [
+                    "args" => [
+                        "booleanInUrl" => true,
+                        "booleanInUrl2" => true,
+                        "boolean" => true,
+                        "boolean2" => true
+                    ]
+                ],
+                "expectBody" => [
+                    "boolean" => 1,
+                    "boolean2" => "true"
+                ],
+                "expectUrl" => [
+                    "booleanInUrl" => "true",
+                    "booleanInUrl2" => true
+                ]
+            ],
+            [
+                "blockName" => "testBoolean",
+                "request" => [
+                    "args" => [
+                        "booleanInUrl" => false,
+                        "booleanInUrl2" => false,
+                        "boolean" => false,
+                        "boolean2" => false
+                    ]
+                ],
+                "expectBody" => [
+                    "boolean" => 0,
+                    "boolean2" => "false"
+                ],
+                "expectUrl" => [
+                    "booleanInUrl" => "false",
+                    "booleanInUrl2" => false
+                ]
+            ]
+        ];
     }
 
     public function dataProvider()
