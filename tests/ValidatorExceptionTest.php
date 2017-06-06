@@ -69,4 +69,13 @@ class ValidatorExceptionTest extends TestCase
     {
         $this->validator->setData(["args" => ["draft" => true]], $this->metadata->getBlockData('testUrlException'));
     }
+
+    /**
+     * @expectedException \RapidAPI\Exception\PackageException
+     * @expectedExceptionMessage Check dateTest. This value can be in formats: Y-m
+     * @expectedExceptionCode RapidAPI\Exception\PackageException::DATETIME_FORMAT_CODE
+     */
+    public function testDatePickerFormatException() {
+        $this->validator->setData(["args" => ["dateTest" => "2016"]], $this->metadata->getBlockData('testDatePickerException'));
+    }
 }

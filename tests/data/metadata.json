@@ -393,6 +393,39 @@
       ]
     },
     {
+      "name": "testDatePickerException",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com"
+      },
+      "args": [
+        {
+          "name": "dateTest",
+          "type": "DatePicker",
+          "info": "url param",
+          "required": true,
+          "custom": {
+            "dateTime": {
+              "fromFormat": [
+                "Y-m"
+              ]
+            }
+          }
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
       "name": "testBoolean",
       "description": "",
       "custom": {
@@ -661,6 +694,98 @@
               ],
               "toFormat": "Y-m-d"
             }
+          }
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "testList",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com"
+      },
+      "args": [
+        {
+          "name": "listTest1",
+          "type": "List",
+          "info": "",
+          "required": false,
+          "structure": {
+            "name": "ID",
+            "type": "String",
+            "info": "",
+            "required": false
+          }
+        },
+        {
+          "name": "listTest2",
+          "type": "List",
+          "info": "",
+          "required": false,
+          "structure": {
+            "name": "ID",
+            "type": "String",
+            "info": "",
+            "required": false
+          },
+          "custom": {
+            "toString": true,
+            "glue": ","
+          }
+        },
+        {
+          "name": "listTest3",
+          "type": "List",
+          "info": "",
+          "required": false,
+          "structure": {
+            "name": "ID",
+            "type": "String",
+            "info": "",
+            "required": false
+          }
+        },
+        {
+          "name": "listTest4",
+          "type": "List",
+          "info": "",
+          "required": false,
+          "structure": {
+            "name": "ID",
+            "type": "Number",
+            "info": "",
+            "required": false
+          },
+          "custom": {
+            "toArray": true,
+            "glue": ";"
+          }
+        },
+        {
+          "name": "listTest5",
+          "type": "List",
+          "info": "",
+          "required": false,
+          "structure": {
+            "name": "ID",
+            "type": "String",
+            "info": "",
+            "required": false
+          },
+          "custom": {
+            "toArray": true,
+            "glue": ";"
           }
         }
       ],

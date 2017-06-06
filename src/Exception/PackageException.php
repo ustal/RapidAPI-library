@@ -8,4 +8,5 @@ class PackageException extends \Exception
     const METHOD_CODE = 2;
     const JSON_VALIDATION_CODE = 3;
     const BLOCK_NOT_EXIST_CODE = 4;
+    const DATETIME_FORMAT_CODE = 5;
 }

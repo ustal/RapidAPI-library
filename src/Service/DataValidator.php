@@ -224,6 +224,9 @@ class DataValidator
                 case 'array':
                     $this->setArrayValue($paramData, $value, $vendorName);
                     break;
+                case 'list':
+                    $this->setListValue($paramData, $value, $vendorName);
+                    break;
                 case 'boolean':
                     $this->setBooleanValue($paramData, $value, $vendorName);
                     break;
@@ -377,6 +380,57 @@ class DataValidator
         }
     }
 
+    /**
+     * @param array        $paramData
+     * @param array|string $value
+     * @param string       $vendorName
+     */
+    private function setListValue($paramData, $value, $vendorName)
+    {
+        $glue = ',';
+        if (!empty($paramData['custom']['glue'])) {
+            $glue = $paramData['custom']['glue'];
+        }
+        if (is_array($value)) {
+            $this->setListArrayValue($paramData, $value, $vendorName, $glue);
+        } else {
+            $this->setListStringValue($paramData, $value, $vendorName, $glue);
+        }
+    }
+
+    /**
+     * @param array  $paramData
+     * @param array  $value
+     * @param string $vendorName
+     * @param string $glue
+     */
+    private function setListArrayValue($paramData, $value, $vendorName, $glue)
+    {
+        if (!empty($paramData['custom']['toString'])) {
+            $value = implode($glue, $value);
+        }
+        $this->setSingleValidData($paramData, $value, $vendorName);
+    }
+
+    /**
+     * @param array  $paramData
+     * @param string $value
+     * @param string $vendorName
+     * @param string $glue
+     */
+    private function setListStringValue($paramData, $value, $vendorName, $glue)
+    {
+        if (!empty($paramData['custom']['toArray'])) {
+            $value = explode($glue, $value);
+            if (mb_strtolower($paramData['structure']['type']) == 'number') {
+                $value = array_map(function(&$item) {
+                    return (int) $item;
+                }, $value);
+            }
+        }
+        $this->setSingleValidData($paramData, $value, $vendorName);
+    }
+
     private function setBooleanValue($paramData, $value, $vendorName)
     {
         $data = filter_var($value, FILTER_VALIDATE_BOOLEAN);
@@ -397,6 +451,7 @@ class DataValidator
 
     private function setDateTimeValue($paramData, $value, $vendorName)
     {
+        $date = false;
         if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
             foreach ($paramData['custom']['dateTime']['fromFormat'] as $format) {
                 if ($format == 'unixtime') {
@@ -412,16 +467,23 @@ class DataValidator
         } else {
             $date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
         }
+        if (!$date instanceof \DateTime) {
+            if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
+                $formatList = implode(',', $paramData['custom']['dateTime']['fromFormat']);
+            }
+            else {
+                $formatList = 'Y-m-d H:i:s';
+            }
+            throw new PackageException("Check " . $paramData["name"] .". This value can be in formats: " . $formatList, PackageException::DATETIME_FORMAT_CODE);
+        }
 
         if (!empty($paramData['custom']['dateTime']['toFormat'])) {
             if ($paramData['custom']['dateTime']['toFormat'] == 'unixtime') {
                 $result = $date->getTimestamp();
-            }
-            else {
+            } else {
                 $result = $date->format($paramData['custom']['dateTime']['toFormat']);
             }
-        }
-        else {
+        } else {
             $result = $date->format('Y-m-d H:i:s');
         }
         $this->setSingleValidData($paramData, $result, $vendorName);
