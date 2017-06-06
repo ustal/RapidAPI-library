@@ -397,30 +397,36 @@ class DataValidator
 
     private function setDateTimeValue($paramData, $value, $vendorName)
     {
-        $fromFormat = 'Y-m-d H:i:s';
-        $toFormat = 'Y-m-d H:i:s';
-
         if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
-            $fromFormat = $paramData['custom']['dateTime']['fromFormat'];
+            foreach ($paramData['custom']['dateTime']['fromFormat'] as $format) {
+                if ($format == 'unixtime') {
+                    $date = new \DateTime();
+                    $date->setTimestamp($value);
+                } else {
+                    $date = \DateTime::createFromFormat($format, $value);
+                }
+                if ($date instanceof \DateTime) {
+                    break;
+                }
+            }
+        } else {
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
         }
+
         if (!empty($paramData['custom']['dateTime']['toFormat'])) {
-            $toFormat = $paramData['custom']['dateTime']['toFormat'];
+            if ($paramData['custom']['dateTime']['toFormat'] == 'unixtime') {
+                $result = $date->getTimestamp();
+            }
+            else {
+                $result = $date->format($paramData['custom']['dateTime']['toFormat']);
+            }
         }
-
-        if (!empty($paramData['custom']['dateTime']['fromUnixTime'])) {
-            $date = new \DateTime();
-            $date->setTimestamp($value);
-        } else {
-            $date = \DateTime::createFromFormat($fromFormat, $value);
+        else {
+            $result = $date->format('Y-m-d H:i:s');
         }
-        if (!empty($paramData['custom']['dateTime']['toUnixTime'])) {
-            $value = $date->getTimestamp();
-        } else {
-            $value = $date->format($toFormat);
-        }
-
-        $this->setSingleValidData($paramData, $value, $vendorName);
+        $this->setSingleValidData($paramData, $result, $vendorName);
     }
+
 
     private function checkBlockMetadata()
     {

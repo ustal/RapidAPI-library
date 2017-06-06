@@ -49,7 +49,6 @@ class ValidatorTest extends TestCase
     }
 
 
-
     /**
      * @dataProvider dataProviderBoolean
      * @param $blockName
@@ -57,14 +56,17 @@ class ValidatorTest extends TestCase
      * @param $expectBody
      * @param $expectUrl
      */
-    public function testBoolean($blockName, $data, $expectBody, $expectUrl) {$this->validator->setData($data, $this->metadata->getBlockData($blockName));
+    public function testBoolean($blockName, $data, $expectBody, $expectUrl)
+    {
+        $this->validator->setData($data, $this->metadata->getBlockData($blockName));
         $bodyParam = $this->validator->getBodyParams();
         $urlParam = $this->validator->getUrlParams();
         $this->assertTrue($bodyParam == $expectBody);
         $this->assertTrue($urlParam == $expectUrl);
     }
 
-    public function testKeyValueArray() {
+    public function testKeyValueArray()
+    {
         $data = [
             "args" => [
                 "keyValue" => [
@@ -76,7 +78,7 @@ class ValidatorTest extends TestCase
         ];
         $expect = [
             "keyValue" => [
-                "email"=> "asd@sada.com",
+                "email" => "asd@sada.com",
                 "facebook" => "12311231",
                 "twitter" => "@asdasd"
             ]
@@ -86,7 +88,8 @@ class ValidatorTest extends TestCase
         $this->assertTrue($expect == $bodyParam);
     }
 
-    public function dataProviderBoolean() {
+    public function dataProviderBoolean()
+    {
         return [
             [
                 "blockName" => "testBoolean",

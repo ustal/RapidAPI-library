@@ -624,6 +624,56 @@
           "info": "Success"
         }
       ]
+    },
+    {
+      "name": "testDatePicker",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com"
+      },
+      "args": [
+        {
+          "name": "dateTest",
+          "type": "DatePicker",
+          "info": "",
+          "required": false,
+          "structure": [
+            {
+              "name": "type",
+              "type": "String",
+              "info": "",
+              "required": true
+            },
+            {
+              "name": "someValue",
+              "type": "String",
+              "info": "",
+              "required": true
+            }
+          ],
+          "custom": {
+            "dateTime": {
+              "fromFormat": [
+                "Y-m-d",
+                "Y-m-d H:i:s",
+                "unixtime"
+              ],
+              "toFormat": "Y-m-d"
+            }
+          }
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
     }
   ]
 }
