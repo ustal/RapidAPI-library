@@ -362,12 +362,18 @@ class DataValidator
 
     private function setArrayValue($paramData, $value, $vendorName)
     {
+        if (!empty($paramData['custom']['keyValue']) && !empty($paramData['custom']['keyValue']['key'] && !empty($paramData['custom']['keyValue']['value']))) {
+            $newArray = [];
+            foreach ($value as $array) {
+                $newArray[$array[$paramData['custom']['keyValue']['key']]] = $array[$paramData['custom']['keyValue']['value']];
+            }
+            $value = $newArray;
+        }
+
         if (mb_strtolower($this->blockMetadata['custom']['method']) == 'get') {
-            $data = is_array($value) ? implode(',', $value) : $value;
-            $this->setSingleValidData($paramData, $data, $vendorName);
+            $this->setSingleValidData($paramData, http_build_query($value), $vendorName);
         } else {
-            $data = is_array($value) ? $value : explode(',', $value);
-            $this->setSingleValidData($paramData, $data, $vendorName);
+            $this->setSingleValidData($paramData, $value, $vendorName);
         }
     }
 

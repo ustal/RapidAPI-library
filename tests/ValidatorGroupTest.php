@@ -116,9 +116,7 @@ class ValidatorGroupTest extends TestCase
                     "accessToken" => "testAccessToken"
                 ],
                 "expect" => [
-                    "email" => "test@email.com",
-                    "pass" => "testPass",
-                    "token" => "testToken"
+                    "accessToken" => "testAccessToken"
                 ]
             ]
         ];

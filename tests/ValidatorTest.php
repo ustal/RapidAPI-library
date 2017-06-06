@@ -64,6 +64,28 @@ class ValidatorTest extends TestCase
         $this->assertTrue($urlParam == $expectUrl);
     }
 
+    public function testKeyValueArray() {
+        $data = [
+            "args" => [
+                "keyValue" => [
+                    ["type" => "email", "someValue" => "asd@sada.com"],
+                    ["type" => "facebook", "someValue" => "12311231"],
+                    ["type" => "twitter", "someValue" => "@asdasd"]
+                ]
+            ]
+        ];
+        $expect = [
+            "keyValue" => [
+                "email"=> "asd@sada.com",
+                "facebook" => "12311231",
+                "twitter" => "@asdasd"
+            ]
+        ];
+        $this->validator->setData($data, $this->metadata->getBlockData('testKeyValueArray'));
+        $bodyParam = $this->validator->getBodyParams();
+        $this->assertTrue($expect == $bodyParam);
+    }
+
     public function dataProviderBoolean() {
         return [
             [
