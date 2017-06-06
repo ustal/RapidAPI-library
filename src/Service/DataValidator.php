@@ -39,16 +39,16 @@ class DataValidator
     {
         $this->blockMetadata = $blockMetadata;
         $this->dataFromRequest = $dataFromRequest;
-        $this->checkGroups();
+        $this->checkGroupValidation();
         $this->parseData();
         $this->checkBlockMetadata();
     }
 
-    private function checkGroups()
+    private function checkGroupValidation()
     {
         if (!empty($this->blockMetadata['custom']['groups'])) {
             foreach ($this->blockMetadata['custom']['groups'] as $group) {
-                $result = $this->test($group);
+                $result = $this->checkGroup($group);
                 if (!$result) {
                     $this->groupError[] = $group;
                 }
@@ -56,12 +56,12 @@ class DataValidator
         }
     }
 
-    private function test($group)
+    private function checkGroup($group)
     {
         $result = $group['required'] == "all" ? true : false;
         foreach ($group['args'] as $arg) {
             if (is_array($arg)) {
-                $result = $this->test($arg);
+                $result = $this->checkGroup($arg);
             } else {
                 $test = $this->isNotEmptyParamByName($arg);
                 if ($group['required'] == "all") {
