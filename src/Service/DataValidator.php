@@ -44,6 +44,36 @@ class DataValidator
         $this->checkBlockMetadata();
     }
 
+
+    /**
+     * @return array
+     */
+    public function getValidData(): array
+    {
+        return $this->parsedValidData;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBlockMetadata(): array
+    {
+        return $this->blockMetadata;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUrlParams(): array
+    {
+        return $this->urlParams;
+    }
+
+    public function getBodyParams(): array
+    {
+        return $this->bodyParams;
+    }
+
     private function checkGroupValidation()
     {
         if (!empty($this->blockMetadata['custom']['groups'])) {
@@ -93,35 +123,6 @@ class DataValidator
         return [];
     }
 
-    /**
-     * @return array
-     */
-    public function getValidData(): array
-    {
-        return $this->parsedValidData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBlockMetadata(): array
-    {
-        return $this->blockMetadata;
-    }
-
-    /**
-     * @return array
-     */
-    public function getUrlParams(): array
-    {
-        return $this->urlParams;
-    }
-
-    public function getBodyParams(): array
-    {
-        return $this->bodyParams;
-    }
-
     private function parseData()
     {
         foreach ($this->blockMetadata['args'] as $paramData) {
@@ -157,8 +158,7 @@ class DataValidator
         $message = '';
         if (!$this->isMultiDimensionalArray($group['args'])) {
             $message .= implode($glue, $group['args']);
-        }
-        else {
+        } else {
             foreach ($group['args'] as $arg) {
                 if (!is_array($arg)) {
                     $message .= $arg . $glue;
@@ -171,7 +171,8 @@ class DataValidator
         return $message;
     }
 
-    private function isMultiDimensionalArray($array) {
+    private function isMultiDimensionalArray($array)
+    {
         foreach ($array as $value) {
             if (is_array($value)) {
                 return true;
@@ -200,7 +201,6 @@ class DataValidator
             }
         } else {
             if ($value !== "" && $value !== null) {
-                // true, false, 1, 0, "asd", "true", "false"
                 return true;
             }
         }
@@ -232,6 +232,9 @@ class DataValidator
                     break;
                 case 'file':
                     $this->setFileValue($paramData, $value, $vendorName);
+                    break;
+                case "datepicker":
+                    $this->setDateTimeValue($paramData, $value, $vendorName);
                     break;
                 default:
                     $this->setSingleValidData($paramData, $value, $vendorName);
@@ -384,6 +387,33 @@ class DataValidator
     {
         $data = (int) $value;
         $this->setSingleValidData($paramData, $data, $vendorName);
+    }
+
+    private function setDateTimeValue($paramData, $value, $vendorName)
+    {
+        $fromFormat = 'Y-m-d H:i:s';
+        $toFormat = 'Y-m-d H:i:s';
+
+        if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
+            $fromFormat = $paramData['custom']['dateTime']['fromFormat'];
+        }
+        if (!empty($paramData['custom']['dateTime']['toFormat'])) {
+            $toFormat = $paramData['custom']['dateTime']['toFormat'];
+        }
+
+        if (!empty($paramData['custom']['dateTime']['fromUnixTime'])) {
+            $date = new \DateTime();
+            $date->setTimestamp($value);
+        } else {
+            $date = \DateTime::createFromFormat($fromFormat, $value);
+        }
+        if (!empty($paramData['custom']['dateTime']['toUnixTime'])) {
+            $value = $date->getTimestamp();
+        } else {
+            $value = $date->format($toFormat);
+        }
+
+        $this->setSingleValidData($paramData, $value, $vendorName);
     }
 
     private function checkBlockMetadata()
