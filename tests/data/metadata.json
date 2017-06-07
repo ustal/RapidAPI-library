@@ -799,6 +799,55 @@
           "info": "Success"
         }
       ]
+    },
+    {
+      "name": "testMap",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com"
+      },
+      "args": [
+        {
+          "name": "mapTest1",
+          "type": "Map",
+          "info": "",
+          "required": false,
+          "custom": {
+            "divide": true,
+            "toFloat": true
+          }
+        },
+        {
+          "name": "mapTest2",
+          "type": "Map",
+          "info": "",
+          "required": false,
+          "custom": {
+            "divide": true,
+            "toFloat": true,
+            "floatLength": 1,
+            "lat": "latitude",
+            "lng": "longitude"
+          }
+        },
+        {
+          "name": "mapTest3",
+          "type": "Map",
+          "info": "",
+          "required": false
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
     }
   ]
 }

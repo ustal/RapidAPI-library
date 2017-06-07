@@ -31,26 +31,58 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | type      | String  | `multipart` or `json`. Default: json|
 | snakeCase | Boolean | True if you want to change all name from `exampleVendorName` to `example_vendor_name`. Priority is given to same tag of args. Default: false|
 
-#### Args
+## Specific tags (depends on dataType of argument)
+
+#### Map
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| divide        | Boolean | Use with Map. Divide string from marketPlace to List.
+| toFloat       | Boolean | Convert `value` or `list of values` into Float. If u divided Map and vendor wants get float values
+| floatLength   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
+| lat           | String  | If divide is true, change list info assocc Array with key = `lat` value
+| lng           | String  | If divide is true, change list info assocc Array with key = `lng` value
+#### DatePicker
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| dateTime.fromFormat   | Array   | Work only with DatePicker. Format to DatePicker arguments. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`]. Attempt to create date rom thous formats
+| dateTime.toFormat     | String  | Work only with DatePicker. Format to DatePicker arguments. Like `Y-m-d\TH:i:s\Z`
+#### Boolean
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| toInt         | Boolean | Конвертирует true/false в целочисленное представление 1/0|
+| toString      | Boolean | Boolean convert `true` into `"true"` and `false` into `"false"`. 
+#### Number
+#### String
+#### Select
+#### File
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| jsonParse     | Boolean | парсит файл и вставляет в собранный JSON|
+| base64encode  | Boolean | закодировать содержимое файла в base64|
+#### Array
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| complex       | Boolean | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
+| keyName       | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
+| valueName     | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+| keyValue.key  | String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value. 
+| keyValue.value| String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value.
+#### List
+| TagName       | Type    | Description |
+|---------------|---------|-------------|
+| toArray       | Boolean | Convert string into List (use `slug` to implode)
+| toString      | Boolean | Convert List into String with delimetr `slug`
+| slug          | String  | Implode or explode arrays/strings by this `slug`
+| toFloat       | Boolean | Convert `list of values` into Float
+| floatLength?   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
+#### All tags (work with all dataTypes)
+
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | wrapName      | String  | используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет: forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}|
 | vendorName    | String  | имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.|
-| toInt         | Boolean | Конвертирует true/false в целочисленное представление 1/0|
-| toString      | Boolean | Use with Boolean and List. Boolean convert `true` into `"true"`. With List convert string into List with `slug` 
-| toArray       | Boolean | Use with List. Convert string into List (use `slug` to implode) 
-| slug          | String  | Use with List. Implode or explode arrays/strings. 
-| complex       | Boolean | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
-| keyName       | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
-| valueName     | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
-| jsonParse     | Boolean | парсит файл и вставляет в собранный JSON. Не знаю зачем надо.|
-| base64encode  | Boolean | закодировать содержимое файла в base64. Не знаю зачем надо.|
 | urlParam      | Boolean | параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url|
 | snakeCase     | Boolean | true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case|
-| keyValue.key  | String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value. 
-| keyValue.value| String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value.
-| dateTime.fromFormat   | Array   | Work only with DatePicker. Format to DatePicker arguments. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`]. Attempt to create date rom thous formats
-| dateTime.toFormat     | String  | Work only with DatePicker. Format to DatePicker arguments. Like `Y-m-d\TH:i:s\Z`
 
 Первый пример (мультипарт)
 POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true
