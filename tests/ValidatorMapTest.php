@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\DataValidator;
 use RapidAPI\Service\Metadata;
 
-class ValidatorGroupTest extends TestCase
+class ValidatorMapTest extends TestCase
 {
     /** @var Metadata */
     private $metadata;
