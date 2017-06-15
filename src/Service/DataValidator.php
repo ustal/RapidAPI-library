@@ -454,6 +454,7 @@ class DataValidator
 
     private function setDateTimeValue($paramData, $value, $vendorName)
     {
+        // todo check if fromFormat.count == 1 and toFormat == fromFormat[0] -> send data to vendor
         $date = false;
         if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
             foreach ($paramData['custom']['dateTime']['fromFormat'] as $format) {
