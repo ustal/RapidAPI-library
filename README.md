@@ -41,11 +41,13 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | floatLength   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
 | lat           | String  | If divide is true, change list info assocc Array with key = `lat` value
 | lng           | String  | If divide is true, change list info assocc Array with key = `lng` value
+
 #### DatePicker
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | dateTime.fromFormat   | Array   | Work only with DatePicker. Format to DatePicker arguments. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`]. Attempt to create date rom thous formats
 | dateTime.toFormat     | String  | Work only with DatePicker. Format to DatePicker arguments. Like `Y-m-d\TH:i:s\Z`
+
 #### Boolean
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
@@ -54,11 +56,13 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 #### Number
 #### String
 #### Select
+
 #### File
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | jsonParse     | Boolean | парсит файл и вставляет в собранный JSON|
 | base64encode  | Boolean | закодировать содержимое файла в base64|
+
 #### Array
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
@@ -67,16 +71,17 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | valueName     | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
 | keyValue.key  | String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value. 
 | keyValue.value| String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value.
+
 #### List
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | toArray       | Boolean | Convert string into List (use `slug` to implode)
-| toString      | Boolean | Convert List into String with delimetr `slug`
-| slug          | String  | Implode or explode arrays/strings by this `slug`
+| toString      | Boolean | Convert List into String with delimetr `slug`. Default `slug` = `,`
+| slug          | String  | Implode or explode arrays/strings by this `slug`. Default `slug` = `,`
 | toFloat       | Boolean | Convert `list of values` into Float
 | floatLength?   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
-#### All tags (work with all dataTypes)
 
+#### All tags (work with all dataTypes)
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | wrapName      | String  | используется для вложенности параметров. Создания дерева вложенности переменных. forum.post.comment создаст массивы forum:{post:{comment:{name}}} где name имя переменной, для которой указан wrapName. Соотв не забывать что последнее всегда будет имя переменной. Не стоит дублировать name: commentContent, wrapName: forum.post.comment.commentContent. Будет: forum:{post:{comment:{commentContetn:{commentContent:{value}}}}}|
