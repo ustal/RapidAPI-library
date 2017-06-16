@@ -1,3 +1,8 @@
+![](https://travis-ci.org/ustal/RapidAPI-library.svg?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/ustal/rapidapi-library/v/stable)](https://packagist.org/packages/ustal/rapidapi-library)
+[![Total Downloads](https://poser.pugx.org/ustal/rapidapi-library/downloads)](https://packagist.org/packages/ustal/rapidapi-library)
+[![Latest Unstable Version](https://poser.pugx.org/ustal/rapidapi-library/v/unstable)](https://packagist.org/packages/ustal/rapidapi-library)
+[![License](https://poser.pugx.org/ustal/rapidapi-library/license)](https://packagist.org/packages/ustal/rapidapi-library)
 #### Manual
 Вызываем менеджер
 `$manager = $this->get('manager');`
