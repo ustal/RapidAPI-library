@@ -4,4 +4,4 @@ php:
   - '7.1'
 deploy:
   provider: releases
-script: phpunit /tests
+script: phpunit tests/
