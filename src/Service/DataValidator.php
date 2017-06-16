@@ -455,6 +455,8 @@ class DataValidator
     private function setDateTimeValue($paramData, $value, $vendorName)
     {
         // todo check if fromFormat.count == 1 and toFormat == fromFormat[0] -> send data to vendor
+        // todo if empty(fromFormat) and empty(toFormat) -> send as string
+        //
         $date = false;
         if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
             foreach ($paramData['custom']['dateTime']['fromFormat'] as $format) {
@@ -472,6 +474,7 @@ class DataValidator
             $date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
         }
         if (!$date instanceof \DateTime) {
+            // todo move out
             if (!empty($paramData['custom']['dateTime']['fromFormat'])) {
                 $formatList = implode(',', $paramData['custom']['dateTime']['fromFormat']);
             }
