@@ -9,8 +9,8 @@
 namespace RapidAPI\Service;
 
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+//use Symfony\Component\HttpFoundation\Request;
+//use Symfony\Component\HttpFoundation\RequestStack;
 use RapidAPI\Exception\PackageException;
 
 class Manager
@@ -21,7 +21,7 @@ class Manager
     /** @var Metadata */
     private $metadata;
 
-    /** @var Request */
+
     private $request;
 
     /** @var array */

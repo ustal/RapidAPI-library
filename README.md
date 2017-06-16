@@ -1,4 +1,4 @@
-![](https://travis-ci.org/ustal/RapidAPI-library.svg?branch=master)
+[![Build status](https://travis-ci.org/ustal/RapidAPI-library.svg?branch=1.2)](https://travis-ci.org/ustal/RapidAPI-library)
 [![Latest Stable Version](https://poser.pugx.org/ustal/rapidapi-library/v/stable)](https://packagist.org/packages/ustal/rapidapi-library)
 [![Total Downloads](https://poser.pugx.org/ustal/rapidapi-library/downloads)](https://packagist.org/packages/ustal/rapidapi-library)
 [![Latest Unstable Version](https://poser.pugx.org/ustal/rapidapi-library/v/unstable)](https://packagist.org/packages/ustal/rapidapi-library)
