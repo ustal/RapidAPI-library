@@ -3,6 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/ustal/rapidapi-library/downloads)](https://packagist.org/packages/ustal/rapidapi-library)
 [![Latest Unstable Version](https://poser.pugx.org/ustal/rapidapi-library/v/unstable)](https://packagist.org/packages/ustal/rapidapi-library)
 [![License](https://poser.pugx.org/ustal/rapidapi-library/license)](https://packagist.org/packages/ustal/rapidapi-library)
+[![codecov](https://codecov.io/gh/ustal/RapidAPI-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ustal/RapidAPI-library)
 #### Manual
 Вызываем менеджер
 `$manager = $this->get('manager');`
@@ -42,7 +43,7 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
 | divide        | Boolean | Use with Map. Divide string from marketPlace to List.
-| toFloat       | Boolean | Convert `value` or `list of values` into Float. If u divided Map and vendor wants get float values
+| toFloat       | Boolean | Convert `value` or `list of values` into Float. If u divided Map and vendor wants get float values not strings
 | floatLength   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
 | lat           | String  | If divide is true, change list info assocc Array with key = `lat` value
 | lng           | String  | If divide is true, change list info assocc Array with key = `lng` value
@@ -50,16 +51,19 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 #### DatePicker
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| dateTime.fromFormat   | Array   | Work only with DatePicker. Format to DatePicker arguments. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`]. Attempt to create date rom thous formats
-| dateTime.toFormat     | String  | Work only with DatePicker. Format to DatePicker arguments. Like `Y-m-d\TH:i:s\Z`
+| dateTime.fromFormat   | Array   | Create date from one of format. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`].
+| dateTime.toFormat     | String  | Convert data to current format. Like `Y-m-d\TH:i:s\Z`
 
 #### Boolean
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| toInt         | Boolean | Конвертирует true/false в целочисленное представление 1/0|
-| toString      | Boolean | Boolean convert `true` into `"true"` and `false` into `"false"`. 
+| toInt         | Boolean | Convert true/false into integer 1/0|
+| toString      | Boolean | Boolean convert `true` into `"true"` and `false` into `"false"` Useful if need send var in url.
+ 
 #### Number
+
 #### String
+
 #### Select
 
 #### File
