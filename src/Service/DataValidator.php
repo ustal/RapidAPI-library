@@ -8,28 +8,28 @@ use RapidAPI\Exception\RequiredFieldException;
 class DataValidator
 {
     /** @var array */
-    private $blockMetadata = [];
+    protected$blockMetadata = [];
 
     /** @var array */
-    private $requiredFieldError = [];
+    protected$requiredFieldError = [];
 
     /** @var array */
-    private $parsedFieldError = [];
+    protected$parsedFieldError = [];
 
     /** @var array */
-    private $dataFromRequest = [];
+    protected$dataFromRequest = [];
 
     /** @var array */
-    private $parsedValidData = [];
+    protected$parsedValidData = [];
 
     /** @var array */
-    private $urlParams = [];
+    protected$urlParams = [];
 
     /** @var array */
-    private $bodyParams = [];
+    protected$bodyParams = [];
 
     /** @var array */
-    private $groupError = [];
+    protected$groupError = [];
 
     /**
      * @param $dataFromRequest
@@ -74,7 +74,7 @@ class DataValidator
         return $this->bodyParams;
     }
 
-    private function checkGroupValidation()
+    protected function checkGroupValidation()
     {
         if (!empty($this->blockMetadata['custom']['groups'])) {
             foreach ($this->blockMetadata['custom']['groups'] as $group) {
@@ -86,7 +86,7 @@ class DataValidator
         }
     }
 
-    private function checkGroup($group)
+    protected function checkGroup($group)
     {
         $result = $group['required'] == "all" ? true : false;
         foreach ($group['args'] as $arg) {
@@ -107,13 +107,13 @@ class DataValidator
         return $result;
     }
 
-    private function isNotEmptyParamByName($paramName)
+    protected function isNotEmptyParamByName($paramName)
     {
         $paramData = $this->findInArgs($paramName);
         return $this->checkNotEmptyParam($paramData);
     }
 
-    private function findInArgs($paramName)
+    protected function findInArgs($paramName)
     {
         foreach ($this->blockMetadata['args'] as $arg) {
             if ($arg['name'] == $paramName) {
@@ -123,7 +123,7 @@ class DataValidator
         return [];
     }
 
-    private function parseData()
+    protected function parseData()
     {
         foreach ($this->blockMetadata['args'] as $paramData) {
             if ($paramData['required'] == true) {
@@ -135,7 +135,7 @@ class DataValidator
         $this->checkErrors();
     }
 
-    private function checkErrors()
+    protected function checkErrors()
     {
         if (!empty($this->requiredFieldError)) {
             throw new RequiredFieldException(implode(',', $this->requiredFieldError));
@@ -153,7 +153,7 @@ class DataValidator
         }
     }
 
-    private function createGroupErrorMessage($group, $glue)
+    protected function createGroupErrorMessage($group, $glue)
     {
         $message = '';
         if (!$this->isMultiDimensionalArray($group['args'])) {
@@ -171,7 +171,7 @@ class DataValidator
         return $message;
     }
 
-    private function isMultiDimensionalArray($array)
+    protected function isMultiDimensionalArray($array)
     {
         foreach ($array as $value) {
             if (is_array($value)) {
@@ -181,7 +181,7 @@ class DataValidator
         return false;
     }
 
-    private function parseRequiredDataFromRequest($paramData)
+    protected function parseRequiredDataFromRequest($paramData)
     {
         if ($this->checkNotEmptyParam($paramData)) {
             $this->parseSingleDataFromRequest($paramData);
@@ -190,7 +190,7 @@ class DataValidator
         }
     }
 
-    private function checkNotEmptyParam($paramData)
+    protected function checkNotEmptyParam($paramData)
     {
         $name = $paramData['name'];
         $type = mb_strtolower($paramData['type']);
@@ -207,7 +207,7 @@ class DataValidator
         return false;
     }
 
-    private function parseSingleDataFromRequest($paramData)
+    protected function parseSingleDataFromRequest($paramData)
     {
         $name = $paramData['name'];
         $vendorName = $this->getParamVendorName($paramData);
@@ -249,7 +249,7 @@ class DataValidator
         }
     }
 
-    private function setSingleValidData($paramData, $value, $vendorName)
+    protected function setSingleValidData($paramData, $value, $vendorName)
     {
         if (!empty($paramData['custom']['urlParam'])) {
             $this->setSingleValidVariable($this->urlParams, $value, $vendorName, $paramData);
@@ -258,7 +258,7 @@ class DataValidator
         }
     }
 
-    private function setSingleValidVariable(&$data, $value, $vendorName, $paramData)
+    protected function setSingleValidVariable(&$data, $value, $vendorName, $paramData)
     {
         if (!empty($paramData['custom']['wrapName'])) {
             $wrapNameList = explode('.', $paramData['custom']['wrapName']);
@@ -272,7 +272,7 @@ class DataValidator
         }
     }
 
-    private function addDepthOfNesting(array &$array, &$depthNameList, $value, $vendorName, $paramData)
+    protected function addDepthOfNesting(array &$array, &$depthNameList, $value, $vendorName, $paramData)
     {
         $result = [];
         while (!empty($depthNameList)) {
@@ -293,7 +293,7 @@ class DataValidator
         return $result;
     }
 
-    private function createComplexValue($paramData, $value, $vendorName)
+    protected function createComplexValue($paramData, $value, $vendorName)
     {
         return [
             $paramData['custom']['keyName'] => $vendorName,
@@ -306,7 +306,7 @@ class DataValidator
      * @param array $paramData
      * @return string
      */
-    private function getParamVendorName(array $paramData): string
+    protected function getParamVendorName(array $paramData): string
     {
         if (!empty($paramData['custom']['vendorName'])) {
             return $paramData['custom']['vendorName'];
@@ -319,7 +319,7 @@ class DataValidator
         }
     }
 
-    private function toSnakeCase(array $paramData): bool
+    protected function toSnakeCase(array $paramData): bool
     {
         $result = false;
         if (isset($paramData['custom']['snakeCase'])) {
@@ -333,7 +333,7 @@ class DataValidator
         return $result;
     }
 
-    private function setJSONValue($paramData, $value, $vendorName)
+    protected function setJSONValue($paramData, $value, $vendorName)
     {
         if (!is_array($value)) {
             $normalizeJson = $this->normalizeJson($value);
@@ -348,7 +348,7 @@ class DataValidator
         }
     }
 
-    private function setFileValue($paramData, $value, $vendorName)
+    protected function setFileValue($paramData, $value, $vendorName)
     {
         if (!empty($paramData['custom']['jsonParse'])) {
             $content = file_get_contents($value);
@@ -366,7 +366,7 @@ class DataValidator
         }
     }
 
-    private function setArrayValue($paramData, $value, $vendorName)
+    protected function setArrayValue($paramData, $value, $vendorName)
     {
         if (!empty($paramData['custom']['keyValue']) && !empty($paramData['custom']['keyValue']['key'] && !empty($paramData['custom']['keyValue']['value']))) {
             $newArray = [];
@@ -388,7 +388,7 @@ class DataValidator
      * @param array|string $value
      * @param string       $vendorName
      */
-    private function setListValue($paramData, $value, $vendorName)
+    protected function setListValue($paramData, $value, $vendorName)
     {
         $glue = ',';
         if (!empty($paramData['custom']['glue'])) {
@@ -407,7 +407,7 @@ class DataValidator
      * @param string $vendorName
      * @param string $glue
      */
-    private function setListArrayValue($paramData, $value, $vendorName, $glue)
+    protected function setListArrayValue($paramData, $value, $vendorName, $glue)
     {
         if (!empty($paramData['custom']['toString'])) {
             $value = implode($glue, $value);
@@ -421,7 +421,7 @@ class DataValidator
      * @param string $vendorName
      * @param string $glue
      */
-    private function setListStringValue($paramData, $value, $vendorName, $glue)
+    protected function setListStringValue($paramData, $value, $vendorName, $glue)
     {
         if (!empty($paramData['custom']['toArray'])) {
             $value = explode($glue, $value);
@@ -434,7 +434,7 @@ class DataValidator
         $this->setSingleValidData($paramData, $value, $vendorName);
     }
 
-    private function setBooleanValue($paramData, $value, $vendorName)
+    protected function setBooleanValue($paramData, $value, $vendorName)
     {
         $data = filter_var($value, FILTER_VALIDATE_BOOLEAN);
         if (!empty($paramData['custom']['toInt'])) {
@@ -446,13 +446,13 @@ class DataValidator
         $this->setSingleValidData($paramData, $data, $vendorName);
     }
 
-    private function setIntValue($paramData, $value, $vendorName)
+    protected function setIntValue($paramData, $value, $vendorName)
     {
         $data = (int) $value;
         $this->setSingleValidData($paramData, $data, $vendorName);
     }
 
-    private function setDateTimeValue($paramData, $value, $vendorName)
+    protected function setDateTimeValue($paramData, $value, $vendorName)
     {
         // todo check if fromFormat.count == 1 and toFormat == fromFormat[0] -> send data to vendor
         // todo if empty(fromFormat) and empty(toFormat) -> send as string
@@ -496,7 +496,7 @@ class DataValidator
         $this->setSingleValidData($paramData, $result, $vendorName);
     }
 
-    private function setMapValue($paramData, $value, $vendorName) {
+    protected function setMapValue($paramData, $value, $vendorName) {
         $value = str_replace(" ", "", $value);
         if (!empty($paramData['custom']['divide'])) {
             $valueAsArray = explode(',', $value);
@@ -519,7 +519,7 @@ class DataValidator
         }
     }
 
-    private function toFloat($value) {
+    protected function toFloat($value) {
         if (is_array($value)) {
             if (!$this->isMultiDimensionalArray($value)) {
                 $value = array_map(function($item) {
@@ -534,7 +534,7 @@ class DataValidator
         return $value;
     }
 
-    private function toFloatWithLength($value, $length) {
+    protected function toFloatWithLength($value, $length) {
         if (is_array($value)) {
             foreach ($value as $key => &$val) {
                 $val = $this->toFloatWithLength($val, $length);
@@ -548,7 +548,7 @@ class DataValidator
     }
 
 
-    private function checkBlockMetadata()
+    protected function checkBlockMetadata()
     {
         if (!isset($this->blockMetadata['custom']['url'])) {
             throw new PackageException("Cant find vendor's endpoint", PackageException::URL_CODE);
@@ -558,7 +558,7 @@ class DataValidator
         }
     }
 
-    private function normalizeJson($jsonString)
+    protected function normalizeJson($jsonString)
     {
         $data = preg_replace_callback('~"([\[{].*?[}\]])"~s', function ($match) {
             return preg_replace('~\s*"\s*~', "\"", $match[1]);
@@ -567,7 +567,7 @@ class DataValidator
         return str_replace('\"', '"', $data);
     }
 
-    private function getValueFromRequestData($paramName)
+    protected function getValueFromRequestData($paramName)
     {
         if (isset($this->dataFromRequest['args'][$paramName])) {
             return $this->dataFromRequest['args'][$paramName];
@@ -575,7 +575,7 @@ class DataValidator
         return null;
     }
 
-    private function getMultipartData($data)
+    protected function getMultipartData($data)
     {
         $result = [];
         foreach ($data as $key => $value) {
@@ -588,7 +588,7 @@ class DataValidator
         return $result;
     }
 
-    private function getBinaryData($data)
+    protected function getBinaryData($data)
     {
         return array_pop($data);
     }
