@@ -6,3 +6,5 @@ deploy:
   provider: releases
 before_script: composer update
 script: ./vendor/bin/phpunit --colors tests/
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
