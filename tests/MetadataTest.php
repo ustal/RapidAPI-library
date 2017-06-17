@@ -366,6 +366,28 @@ class MetadataTest extends TestCase
                             ],
                     ],
                     [
+                        "name" => "testDatePickerException",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "dateTest",
+                                "type" => "DatePicker",
+                                "info" => "url param",
+                                "required" => true
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
+                    ],
+                    [
                         'name' => 'testBoolean',
                         'description' => '',
                         'args' =>
@@ -455,7 +477,6 @@ class MetadataTest extends TestCase
                                 ],
                             ],
                     ],
-
                     [
                         'name' => 'testGroup2',
                         'description' => '',
@@ -543,6 +564,152 @@ class MetadataTest extends TestCase
                                 ],
                             ],
                     ],
+                    [
+                        "name" => "testDatePicker",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "dateTest",
+                                "type" => "DatePicker",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    [
+                                        "name" => "type",
+                                        "type" => "String",
+                                        "info" => "",
+                                        "required" => true
+                                    ],
+                                    [
+                                        "name" => "someValue",
+                                        "type" => "String",
+                                        "info" => "",
+                                        "required" => true
+                                    ]
+                                ]
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
+                    ],
+                    [
+                        "name" => "testList",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "listTest1",
+                                "type" => "List",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    "name" => "ID",
+                                    "type" => "String",
+                                    "info" => "",
+                                    "required" => false
+                                ]
+                            ],
+                            [
+                                "name" => "listTest2",
+                                "type" => "List",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    "name" => "ID",
+                                    "type" => "String",
+                                    "info" => "",
+                                    "required" => false
+                                ]
+                            ],
+                            [
+                                "name" => "listTest3",
+                                "type" => "List",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    "name" => "ID",
+                                    "type" => "String",
+                                    "info" => "",
+                                    "required" => false
+                                ]
+                            ],
+                            [
+                                "name" => "listTest4",
+                                "type" => "List",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    "name" => "ID",
+                                    "type" => "Number",
+                                    "info" => "",
+                                    "required" => false
+                                ]
+                            ],
+                            [
+                                "name" => "listTest5",
+                                "type" => "List",
+                                "info" => "",
+                                "required" => false,
+                                "structure" => [
+                                    "name" => "ID",
+                                    "type" => "String",
+                                    "info" => "",
+                                    "required" => false
+                                ]
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
+                    ],
+                    [
+                        "name" => "testMap",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "mapTest1",
+                                "type" => "Map",
+                                "info" => "",
+                                "required" => false
+                            ],
+                            [
+                                "name" => "mapTest2",
+                                "type" => "Map",
+                                "info" => "",
+                                "required" => false
+                            ],
+                            [
+                                "name" => "mapTest3",
+                                "type" => "Map",
+                                "info" => "",
+                                "required" => false
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
+                    ]
                 ],
         ];
         $blockData = $this->metadata->getClearMetadata();
