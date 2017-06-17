@@ -4,4 +4,5 @@ php:
   - '7.1'
 deploy:
   provider: releases
+script: composer update
 script: /vendor/bin/phpunit --colors tests/
