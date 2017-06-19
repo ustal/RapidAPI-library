@@ -9,3 +9,5 @@ script:
   - vendor/bin/phpunit
 after_success:
     - bash <(curl -s https://codecov.io/bash)
+notifications:
+    slack: ustal:3YYUoADB5pMlbLhtYmkYzO2p
