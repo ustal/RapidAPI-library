@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: rapidapi
+ * User: George Cherenkov
  * Date: 14.04.17
  * Time: 16:49
  */

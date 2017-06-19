@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: rapidapi
+ * User: George Cherenkov
  * Date: 14.04.17
  * Time: 14:28
  */
@@ -18,6 +18,9 @@ class Manager
 
     /** @var Generator */
     private $generator;
+
+    /** @var string */
+    private $blockName;
 
     /** @var array */
     private $currentBlockMetadata = [];
@@ -41,14 +44,39 @@ class Manager
     }
 
     /**
-     * @param string $blockName       Block name from metadata.json
-     * @param array  $dataFromRequest Data from Request (use parsers)
+     * Set metadata file or array
+     * @param $metadata
      */
-    public function setData($blockName, $dataFromRequest)
+    public function setMetadata($metadata)
+    {
+        $this->metadata->set($metadata);
+    }
+
+    /**
+     * Set parsed data from request (use parser for your framework)
+     * @param array $dataFromRequest
+     */
+    public function setDataFromRequest($dataFromRequest)
     {
         $this->dataFromRequest = $dataFromRequest;
-        $this->currentBlockMetadata = $this->metadata->getBlockData($blockName);
-        $this->dataValidator->setData($dataFromRequest, $blockName);
+    }
+
+    /**
+     * Set current endpoint
+     * @param $blockName
+     */
+    public function setBlockName($blockName)
+    {
+        $this->blockName = $blockName;
+    }
+
+    /**
+     * Start parsing data from request by validation rules
+     */
+    public function start()
+    {
+        $this->currentBlockMetadata = $this->metadata->getBlockData($this->blockName);
+        $this->dataValidator->setData($this->dataFromRequest, $this->blockName);
     }
 
     /**
@@ -60,7 +88,7 @@ class Manager
     }
 
     /**
-     * @return array Data that will be in body (json, binery, multipart)
+     * @return array Data that will be in body (json, binary, multipart)
      */
     public function getBodyParams(): array
     {

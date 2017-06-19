@@ -75,9 +75,7 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 #### Array
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| complex       | Boolean | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
-| keyName       | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
-| valueName     | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+| keyValue      | Array   | Use to create key=>value from array with params key and value.
 | keyValue.key  | String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value. 
 | keyValue.value| String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value.
 
@@ -97,6 +95,24 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | vendorName    | String  | имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.|
 | urlParam      | Boolean | параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url|
 | snakeCase     | Boolean | true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case|
+| complex       | Array   | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
+| complex.key   | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
+| complex.value | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+
+#### Пример комплекса
+```
+{"contacts":
+    [
+    "type": "facebook",
+    "value": {value}
+    ],
+    [
+    "type": "twitter",
+    "value": {value}
+    ]
+}
+
+```
 
 Первый пример (мультипарт)
 POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true

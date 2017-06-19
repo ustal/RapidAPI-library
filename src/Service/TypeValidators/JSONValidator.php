@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:15
  */
@@ -13,7 +13,7 @@ use RapidAPI\Exception\PackageException;
 
 class JSONValidator extends AbstractValidator implements TypeValidatorInterface
 {
-    public function save($paramData, $value, $vendorName, $multipart=false)
+    public function parse($paramData, $value, $vendorName, $multipart=false)
     {
         if (!is_array($value)) {
             $normalizeJson = $this->normalizeJson($value);
@@ -21,10 +21,10 @@ class JSONValidator extends AbstractValidator implements TypeValidatorInterface
             if (json_last_error()) {
                 throw new PackageException("Parse error in: " . $paramData['name'], PackageException::JSON_VALIDATION_CODE);
             } else {
-                $this->setSingleValidData($paramData, $data, $vendorName);
+                return $data;
             }
         } else {
-            $this->setSingleValidData($paramData, $value, $vendorName);
+            return $value;
         }
     }
 

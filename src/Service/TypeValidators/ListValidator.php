@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:08
  */
@@ -11,28 +11,28 @@ namespace RapidAPI\Service\TypeValidators;
 
 class ListValidator extends AbstractValidator implements TypeValidatorInterface
 {
-    public function save($paramData, $value, $vendorName, $multipart=false)
+    public function parse($paramData, $value, $vendorName, $multipart=false)
     {
         $glue = ',';
         if (!empty($paramData['custom']['glue'])) {
             $glue = $paramData['custom']['glue'];
         }
         if (is_array($value)) {
-            $this->setListArrayValue($paramData, $value, $vendorName, $glue);
+            return $this->getListArrayValue($paramData, $value, $glue);
         } else {
-            $this->setListStringValue($paramData, $value, $vendorName, $glue);
+            return $this->getListStringValue($paramData, $value, $glue);
         }
     }
 
-    protected function setListArrayValue($paramData, $value, $vendorName, $glue)
+    protected function getListArrayValue($paramData, $value, $glue)
     {
         if (!empty($paramData['custom']['toString'])) {
             $value = implode($glue, $value);
         }
-        $this->setSingleValidData($paramData, $value, $vendorName);
+        return $value;
     }
 
-    protected function setListStringValue($paramData, $value, $vendorName, $glue)
+    protected function getListStringValue($paramData, $value, $glue)
     {
         if (!empty($paramData['custom']['toArray'])) {
             $value = explode($glue, $value);
@@ -42,6 +42,7 @@ class ListValidator extends AbstractValidator implements TypeValidatorInterface
                 }, $value);
             }
         }
-        $this->setSingleValidData($paramData, $value, $vendorName);
+
+        return $value;
     }
 }

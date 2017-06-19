@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:10
  */
@@ -11,15 +11,22 @@ namespace RapidAPI\Service\TypeValidators;
 
 class ArrayValidator extends AbstractValidator implements TypeValidatorInterface
 {
-    public function save($paramData, $value, $vendorName, $multipart=false)
+    public function parse($paramData, $value, $vendorName, $multipart = false)
     {
         if (!empty($paramData['custom']['keyValue']) && !empty($paramData['custom']['keyValue']['key'] && !empty($paramData['custom']['keyValue']['value']))) {
-            $newArray = [];
-            foreach ($value as $array) {
-                $newArray[$array[$paramData['custom']['keyValue']['key']]] = $array[$paramData['custom']['keyValue']['value']];
-            }
-            $value = $newArray;
+            return $this->createKeyValue($paramData, $value);
         }
-        $this->setSingleValidData($paramData, $value, $vendorName);
+
+        return $value;
+    }
+
+    protected function createKeyValue($paramData, $value)
+    {
+        $result = [];
+        foreach ($value as $array) {
+            $result[$array[$paramData['custom']['keyValue']['key']]] = $array[$paramData['custom']['keyValue']['value']];
+        }
+
+        return $result;
     }
 }

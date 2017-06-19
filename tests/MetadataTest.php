@@ -24,7 +24,7 @@ class MetadataTest extends TestCase
         $this->metadata = $metadata;
     }
 
-    public function testClearData()
+    public function testGetClearMetadata()
     {
         $data = [
             'package' => 'TestMetadata',
@@ -712,7 +712,218 @@ class MetadataTest extends TestCase
                     ]
                 ],
         ];
-        $blockData = $this->metadata->getClearMetadata();
+        $clearMetadata = $this->metadata->getClearMetadata();
+        $this->assertTrue($clearMetadata == $data);
+    }
+
+    public function testGetBlockData()
+    {
+        $data = [
+            'name' => 'testKeyValueArray',
+            'description' => '',
+            "custom" => [
+                "method" => "POST",
+                "url" => "http://example.com"
+            ],
+            'args' =>
+                [
+
+                    [
+                        'name' => 'keyValue',
+                        'type' => 'Array',
+                        'info' => '',
+                        'required' => false,
+                        'structure' =>
+                            [
+
+                                [
+                                    'name' => 'type',
+                                    'type' => 'String',
+                                    'info' => '',
+                                    'required' => true
+                                ],
+                                [
+                                    'name' => 'someValue',
+                                    'type' => 'String',
+                                    'info' => '',
+                                    'required' => true
+                                ]
+                            ],
+                        "custom" => [
+                            "keyValue" => [
+                                "key" => "type",
+                                "value" => "someValue"
+                            ]
+                        ]
+                    ],
+                ],
+            'callbacks' =>
+                [
+
+                    [
+                        'name' => 'error',
+                        'info' => 'Error',
+                    ],
+
+                    [
+                        'name' => 'success',
+                        'info' => 'Success',
+                    ],
+                ],
+        ];
+        $blockData = $this->metadata->getBlockData('testKeyValueArray');
         $this->assertTrue($blockData == $data);
+    }
+
+    /**
+     * @expectedException \RapidAPI\Exception\PackageException
+     * @expectedExceptionMessage Not found description in metadata for current block
+     * @expectedExceptionCode \RapidAPI\Exception\PackageException::BLOCK_NOT_EXIST_CODE
+     */
+    public function testPackageException()
+    {
+        $this->metadata->getBlockData('NonExist');
+    }
+
+    /**
+     * @expectedException \RapidAPI\Exception\PackageException
+     * @expectedExceptionMessage Metadata not found
+     */
+    public function testFileNotFoundException()
+    {
+        $this->metadata->set('/dev/null');
+    }
+
+    public function testMetadataFromArray()
+    {
+        $data = ['package' => 'TestMetadata',
+            'tagline' => 'Test metadata',
+            'description' => 'test description',
+            'image' => 'some image link',
+            'repo' => 'git repo',
+            'keywords' =>
+                [
+                    'metadata',
+                ],
+            'accounts' =>
+                [
+                    'domain' => 'google.com',
+                    'credentials' =>
+                        [
+                            'apiKey',
+                        ],
+                ],
+            'blocks' =>
+                [
+                    [
+                        'name' => 'testBlock1',
+                        'description' => 'This endpoint allows to receive weather information.',
+                        'args' =>
+                            [
+                                [
+                                    'name' => 'testCredentials',
+                                    'type' => 'credentials',
+                                    'info' => 'test credentials info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testString',
+                                    'type' => 'String',
+                                    'info' => 'test string info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testNumber',
+                                    'type' => 'Number',
+                                    'info' => 'test number info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testBoolean',
+                                    'type' => 'Boolean',
+                                    'info' => 'test boolean info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testMap',
+                                    'type' => 'Map',
+                                    'info' => 'test map info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testSelect',
+                                    'type' => 'Select',
+                                    'options' =>
+                                        [
+                                            'value1',
+                                            'value2',
+                                        ],
+                                    'info' => 'test select info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testDatePicker',
+                                    'type' => 'DatePicker',
+                                    'info' => 'test datepicker info',
+                                    'required' => true,
+                                ],
+                                [
+                                    'name' => 'testList',
+                                    'type' => 'List',
+                                    'info' => 'test list info',
+                                    'required' => true,
+                                    'structure' =>
+                                        [
+                                            'name' => 'testListId',
+                                            'type' => 'String',
+                                            'info' => 'some child info',
+                                        ],
+                                ],
+                                [
+                                    'name' => 'testArray',
+                                    'type' => 'Array',
+                                    'info' => 'test array info',
+                                    'required' => true,
+                                    'structure' =>
+                                        [
+
+                                            [
+                                                'name' => 'testArrayId',
+                                                'type' => 'Number',
+                                                'info' => 'some child info part 1',
+                                            ],
+                                            [
+                                                'name' => 'testArrayName',
+                                                'type' => 'String',
+                                                'info' => 'some child info part 2',
+                                            ],
+                                        ],
+                                ],
+                            ],
+                        'callbacks' =>
+                            [
+                                [
+                                    'name' => 'error',
+                                    'info' => 'Error',
+                                ],
+                                [
+                                    'name' => 'success',
+                                    'info' => 'Success',
+                                ],
+                            ],
+                    ]
+                ]
+        ];
+        $this->metadata->set($data);
+    }
+
+    /**
+     * @expectedException \RapidAPI\Exception\PackageException
+     * @expectedExceptionMessage Syntax error. Incorrect Metadata JSON.
+     * @expectedExceptionCode \RapidAPI\Exception\PackageException::JSON_VALIDATION_CODE
+     */
+    public function testNotValidMetadata()
+    {
+        $this->metadata->set(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'metadata-unvalid.json');
     }
 }

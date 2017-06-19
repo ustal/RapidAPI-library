@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 18:13
  */
@@ -35,29 +35,29 @@ class Generator
         $result['url'] = $url;
 
         if ($method == 'GET') {
-            $this->addAsQuery(array_merge($params, $urlParam));
-        } else {
-            if (!empty($urlParam)) {
-                $this->addAsQuery($params);
-            }
+            $urlParam = array_merge($params, $urlParam);
+        }
 
-            if ($this->hasFormParamHeader($headers)) {
-                $this->addAsFormParams($params);
-            } else {
-                switch ($type) {
-                    case 'BINARY':
-                        $this->addAsBody($params);
-                        break;
-                    case 'JSON':
-                        $this->addAsJson($params);
-                        break;
-                    case 'MULTIPART':
-                        $this->addAsMultipart($params);
-                        break;
-                    default:
-                        $this->addAsJson($params);
-                        break;
-                }
+        if (!empty($urlParam)) {
+            $this->addAsQuery($params);
+        }
+
+        if ($this->hasFormParamHeader($headers)) {
+            $this->addAsFormParams($params);
+        } else {
+            switch ($type) {
+                case 'BINARY':
+                    $this->addAsBody($params);
+                    break;
+                case 'JSON':
+                    $this->addAsJson($params);
+                    break;
+                case 'MULTIPART':
+                    $this->addAsMultipart($params);
+                    break;
+                default:
+                    $this->addAsJson($params);
+                    break;
             }
         }
 

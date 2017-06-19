@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:28
  */
@@ -13,7 +13,7 @@ use RapidAPI\Exception\PackageException;
 
 class DatePickerValidator extends AbstractValidator implements TypeValidatorInterface
 {
-    public function save($paramData, $value, $vendorName, $multipart=false)
+    public function parse($paramData, $value, $vendorName, $multipart=false)
     {
         // todo check if fromFormat.count == 1 and toFormat == fromFormat[0] -> send data to vendor
         // todo if empty(fromFormat) and empty(toFormat) -> send as string
@@ -53,6 +53,7 @@ class DatePickerValidator extends AbstractValidator implements TypeValidatorInte
         } else {
             $result = $date->format('Y-m-d H:i:s');
         }
-        $this->setSingleValidData($paramData, $result, $vendorName);
+//        $this->setSingleValidData($paramData, $result, $vendorName);
+        return $result;
     }
 }

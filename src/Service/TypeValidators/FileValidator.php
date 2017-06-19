@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:19
  */
@@ -11,11 +11,11 @@ namespace RapidAPI\Service\TypeValidators;
 
 class FileValidator extends JSONValidator
 {
-    public function save($paramData, $value, $vendorName, $multipart=false)
+    public function parse($paramData, $value, $vendorName, $multipart=false)
     {
         if (!empty($paramData['custom']['jsonParse'])) {
             $content = file_get_contents($value);
-            parent::save($paramData, $content, $vendorName);
+//            parent::save($paramData, $content, $vendorName);
         } else {
             if ($multipart) {
                 $content = fopen($value, 'r');
@@ -25,7 +25,8 @@ class FileValidator extends JSONValidator
                     $content = base64_encode($content);
                 }
             }
-            $this->setSingleValidData($paramData, $content, $vendorName);
+//            $this->setSingleValidData($paramData, $content, $vendorName);
         }
+        return $content;
     }
 }

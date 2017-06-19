@@ -24,12 +24,6 @@ class DataValidator
     protected $parsedValidData = [];
 
     /** @var array */
-    protected $urlParams = [];
-
-    /** @var array */
-    protected $bodyParams = [];
-
-    /** @var array */
     protected $groupError = [];
 
     protected $typeValidator;
@@ -50,7 +44,8 @@ class DataValidator
         $this->typeValidator->setMultipart($this->isMultipart());
         $this->checkGroupValidation();
         $this->parseData();
-        $this->checkBlockMetadata();
+//        $this->checkBlockMetadata();
+        $this->checkErrors();
     }
 
 
@@ -75,12 +70,14 @@ class DataValidator
      */
     public function getUrlParams(): array
     {
-        return $this->urlParams;
+//        return $this->urlParams;
+        return $this->typeValidator->getUrlParams();
     }
 
     public function getBodyParams(): array
     {
-        return $this->bodyParams;
+//        return $this->bodyParams;
+        return $this->typeValidator->getBodyParams();
     }
 
     protected function isMultipart() {
@@ -148,17 +145,38 @@ class DataValidator
                 $this->parseSingleDataFromRequest($paramData);
             }
         }
-        $this->checkErrors();
     }
 
     protected function checkErrors()
     {
+        $this->checkBlockErrors();
+        $this->checkRequiredFieldError();
+        $this->checkParsedFieldError();
+        $this->checkGroupError();
+    }
+
+    protected function checkBlockErrors() {
+        if (!isset($this->blockMetadata['custom']['url'])) {
+            throw new PackageException("Cant find vendor's endpoint", PackageException::URL_CODE);
+        }
+        if (!isset($this->blockMetadata['custom']['method'])) {
+            throw new PackageException("Cant find method of vendor's endpoint", PackageException::METHOD_CODE);
+        }
+    }
+
+    protected function checkRequiredFieldError() {
         if (!empty($this->requiredFieldError)) {
             throw new RequiredFieldException(implode(',', $this->requiredFieldError));
         }
+    }
+
+    protected function checkParsedFieldError() {
         if (!empty($this->parsedFieldError)) {
             throw new PackageException("Parse error in: " . implode(',', $this->parsedFieldError), PackageException::JSON_VALIDATION_CODE);
         }
+    }
+
+    protected function checkGroupError() {
         if (!empty($this->groupError)) {
             $message = "Follow group validation rules: ";
             foreach ($this->groupError as $group) {
@@ -185,6 +203,16 @@ class DataValidator
             }
         }
         return $message;
+    }
+
+    public function isMultiDimensionalArray($array)
+    {
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function parseRequiredDataFromRequest($paramData)
@@ -219,11 +247,13 @@ class DataValidator
         $vendorName = $this->getParamVendorName($paramData);
         $paramType = mb_strtolower($paramData['type']);
         $value = $this->getValueFromRequestData($name);
-        // todo fix double checking required params!
-        // todo maybe check if value is not null ?
         if ($this->checkNotEmptyParam($paramData)) {
-            // todo add new metadata param "nullable" => true (default false) to send "" or "0" param
-            $this->typeValidator->save($paramData, $value, $vendorName, $paramType);
+            if (!empty($paramData['custom']['urlParam'])) {
+
+            }
+            else {
+                $this->typeValidator->save($paramData, $value, $vendorName, $paramType);
+            }
         }
     }
 
@@ -259,15 +289,6 @@ class DataValidator
         return $result;
     }
 
-    protected function checkBlockMetadata()
-    {
-        if (!isset($this->blockMetadata['custom']['url'])) {
-            throw new PackageException("Cant find vendor's endpoint", PackageException::URL_CODE);
-        }
-        if (!isset($this->blockMetadata['custom']['method'])) {
-            throw new PackageException("Cant find method of vendor's endpoint", PackageException::METHOD_CODE);
-        }
-    }
 
     protected function getValueFromRequestData($paramName)
     {

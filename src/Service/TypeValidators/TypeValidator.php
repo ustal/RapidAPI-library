@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ustal
+ * User: George Cherenkov
  * Date: 17.06.17
  * Time: 19:01
  */
@@ -38,7 +38,12 @@ class TypeValidator
     /** @var bool */
     private $isMultipart = false;
 
-    public function __construct() {
+    private $urlParams = [];
+
+    private $bodyParams = [];
+
+    public function __construct()
+    {
         $this->stringValidator = new StringValidator();
         $this->listValidator = new ListValidator();
         $this->arrayValidator = new ArrayValidator();
@@ -50,41 +55,104 @@ class TypeValidator
         $this->datePickerValidator = new DatePickerValidator();
     }
 
-    public function setMultipart(bool $multipart) {
+    public function getUrlParams(): array
+    {
+        return $this->urlParams;
+    }
+
+    public function getBodyParams(): array
+    {
+        return $this->bodyParams;
+    }
+
+    public function setMultipart(bool $multipart)
+    {
         $this->isMultipart = $multipart;
     }
 
-    public function save($paramData, $value, $vendorName, $type) {
+    public function save($paramData, $value, $vendorName, $type)
+    {
         switch ($type) {
             case 'json':
-                $validator = $this->JSONValidator;
+                $data = $this->JSONValidator->parse($paramData, $value, $vendorName);
                 break;
             case 'array':
-                $validator = $this->arrayValidator;
+                $data = $this->arrayValidator->parse($paramData, $value, $vendorName);
                 break;
             case 'list':
-                $validator = $this->listValidator;
+                $data = $this->listValidator->parse($paramData, $value, $vendorName);
                 break;
             case 'boolean':
-                $validator = $this->booleanValidator;
+                $data = $this->booleanValidator->parse($paramData, $value, $vendorName);
                 break;
             case 'number':
-                $validator = $this->numberValidator;
+                $data = $this->numberValidator->parse($paramData, $value, $vendorName);
                 break;
             case 'file':
-                $validator = $this->fileValidator;
+                $data = $this->fileValidator->parse($paramData, $value, $vendorName, $this->isMultipart);
                 break;
             case "datepicker":
-                $validator = $this->datePickerValidator;
+                $data = $this->datePickerValidator->parse($paramData, $value, $vendorName);
                 break;
             case "map":
-                $validator = $this->mapValidator;
+                $data = $this->mapValidator->parse($paramData, $value, $vendorName);
                 break;
             default:
-                $validator = $this->stringValidator;
+                $data = $this->stringValidator->parse($paramData, $value, $vendorName);
                 break;
         }
+        $this->setSingleValidData($paramData, $data, $vendorName);
+    }
 
-        $validator->save($paramData, $value, $vendorName, $this->isMultipart);
+    protected function setSingleValidData($paramData, $value, $vendorName)
+    {
+        if (!empty($paramData['custom']['urlParam'])) {
+            $this->setSingleValidVariable($this->urlParams, $value, $vendorName, $paramData);
+        } else {
+            $this->setSingleValidVariable($this->bodyParams, $value, $vendorName, $paramData);
+        }
+    }
+
+    protected function setSingleValidVariable(&$data, $value, $vendorName, $paramData)
+    {
+        if (!empty($paramData['custom']['wrapName'])) {
+            $wrapNameList = explode('.', $paramData['custom']['wrapName']);
+            $this->addDepthOfNesting($data, $wrapNameList, $value, $vendorName, $paramData);
+        } else {
+            if (!empty($paramData['custom']['complex'])) {
+                $data[$vendorName] = $this->createComplexValue($paramData, $value, $vendorName);
+            } else {
+                $data[$vendorName] = $value;
+            }
+        }
+    }
+
+    protected function addDepthOfNesting(array &$array, &$depthNameList, $value, $vendorName, $paramData)
+    {
+        $result = [];
+        while (!empty($depthNameList)) {
+            $deepName = array_shift($depthNameList);
+            if (!isset($array[$deepName]) && !empty($depthNameList)) {
+                $array[$deepName] = [];
+            }
+            if (empty($depthNameList)) {
+                if (!empty($paramData['custom']['complex'])) {
+                    $array[$deepName][] = $this->createComplexValue($paramData, $value, $vendorName);
+                } else {
+                    $array[$deepName][$vendorName] = $value;
+                }
+            }
+            $result = $this->addDepthOfNesting($array[$deepName], $depthNameList, $value, $vendorName, $paramData);
+        }
+
+        return $result;
+    }
+
+    protected function createComplexValue($paramData, $value, $vendorName)
+    {
+        return [
+            $paramData['custom']['keyName'] => $vendorName,
+            $paramData['custom']['valueName'] => $value
+        ];
     }
 }
