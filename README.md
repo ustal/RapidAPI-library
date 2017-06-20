@@ -44,14 +44,16 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 |---------------|---------|-------------|
 | divide        | Boolean | Use with Map. Divide string from marketPlace to List.
 | toFloat       | Boolean | Convert `value` or `list of values` into Float. If u divided Map and vendor wants get float values not strings
-| floatLength   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
+| length        | Number  | Length of float or string param. Set 1 to convert 123.1111 to 123.1 or "123.1111" to "123.1"
+
+#### Map (temporary not available)
 | lat           | String  | If divide is true, change list info assocc Array with key = `lat` value
 | lng           | String  | If divide is true, change list info assocc Array with key = `lng` value
 
 #### DatePicker
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| dateTime.fromFormat   | Array   | Create date from one of format. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`].
+| dateTime.fromFormat   | Array   | Create date from one of format. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `timestamp`].
 | dateTime.toFormat     | String  | Convert data to current format. Like `Y-m-d\TH:i:s\Z`
 
 #### Boolean
