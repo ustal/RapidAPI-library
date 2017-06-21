@@ -12,7 +12,7 @@ namespace RapidAPI\Tests\TypeValidators;
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\TypeValidators\DatePickerValidator;
 
-class StringValidatorTest extends TestCase
+class DatePickerValidatorTest extends TestCase
 {
     /** @var DatePickerValidator */
     private $validator;
