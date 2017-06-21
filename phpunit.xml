@@ -5,8 +5,8 @@
     </php>
     <testsuites>
         <testsuite name="Example">
-            <directory suffix=".php">./tests/</directory>
-            <directory suffix=".php">./tests/</directory>
+            <directory suffix=".php">./tests/TypeValidators/</directory>
+            <!--<directory suffix=".php">./tests/</directory>-->
         </testsuite>
     </testsuites>
     <filter>
