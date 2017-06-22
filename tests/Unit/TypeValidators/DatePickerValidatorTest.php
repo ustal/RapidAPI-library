@@ -7,7 +7,7 @@
  * Time: 17:16
  */
 
-namespace RapidAPI\Tests\TypeValidators;
+namespace RapidAPI\Tests\Unit\TypeValidators;
 
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\TypeValidators\DatePickerValidator;
@@ -102,6 +102,5 @@ class DatePickerValidatorTest extends TestCase
         ];
         $value = '2017-10-30,112:13:15';
         $result = $this->validator->parse($paramData, $value, $vendorName);
-//        $this->assertEquals($expect, $result);
     }
 }

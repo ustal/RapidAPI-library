@@ -9,7 +9,7 @@
 namespace RapidAPI\Service\TypeValidators;
 
 
-class BooleanValidator extends AbstractValidator implements TypeValidatorInterface
+class BooleanValidator implements TypeValidatorInterface
 {
     public function parse($paramData, $value, $vendorName, $multipart=false)
     {

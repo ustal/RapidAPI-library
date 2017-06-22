@@ -19,45 +19,43 @@ class Generator
     /**
      * Create array with headers and params for Guzzle
      * @param array  $headers
-     * @param array  $urlParam
-     * @param array  $params
+     * @param array  $urlParams
+     * @param array  $bodyParams
      * @param string $url
      * @param string $method POST, GET, PUT, PATCH, DELETE
      * @param string $type   binary, json, multipart
      * @return array
      */
-    public function createGuzzleData($url, $headers, $urlParam, $params, $method, $type)
+    public function createGuzzleData($url, $headers, $urlParams, $bodyParams, $method, $type)
     {
         $method = mb_strtoupper($method);
-        $result = [];
-        $result['headers'] = $headers;
-        $result['method'] = $method;
-        $result['url'] = $url;
+        $this->result['headers'] = $headers;
+        $this->result['method'] = $method;
+        $this->result['url'] = $url;
 
         if ($method == 'GET') {
-            $urlParam = array_merge($params, $urlParam);
+            $urlParams = array_merge($bodyParams, $urlParams);
         }
 
-        if (!empty($urlParam)) {
-            $this->addAsQuery($params);
+        if (!empty($urlParams)) {
+            $this->addAsQuery($urlParams);
         }
 
-        if ($this->hasFormParamHeader($headers)) {
-            $this->addAsFormParams($params);
-        } else {
-            switch ($type) {
-                case 'BINARY':
-                    $this->addAsBody($params);
-                    break;
-                case 'JSON':
-                    $this->addAsJson($params);
-                    break;
-                case 'MULTIPART':
-                    $this->addAsMultipart($params);
-                    break;
-                default:
-                    $this->addAsJson($params);
-                    break;
+        if (!empty($bodyParams)) {
+            if ($this->hasFormParamHeader($headers)) {
+                $this->addAsFormParams($bodyParams);
+            } else {
+                switch ($type) {
+                    case 'BINARY':
+                        $this->addAsBody($bodyParams);
+                        break;
+                    case 'JSON':
+                        $this->addAsJson($bodyParams);
+                        break;
+                    case 'MULTIPART':
+                        $this->addAsMultipart($bodyParams);
+                        break;
+                }
             }
         }
 

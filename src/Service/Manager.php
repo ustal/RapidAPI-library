@@ -31,9 +31,9 @@ class Manager
     /**
      * Manager constructor.
      * @param DataValidator $dataValidator
-     * @param Metadata      $metadata
-     * @param Sender        $sender
-     * @param Generator     $generator
+     * @param Metadata $metadata
+     * @param Sender $sender
+     * @param Generator $generator
      */
     public function __construct(DataValidator $dataValidator, Metadata $metadata, Sender $sender, Generator $generator)
     {
@@ -68,6 +68,7 @@ class Manager
     public function setBlockName($blockName)
     {
         $this->blockName = $blockName;
+        $this->currentBlockMetadata = $this->metadata->getBlockData($blockName);
     }
 
     /**
@@ -75,8 +76,7 @@ class Manager
      */
     public function start()
     {
-        $this->currentBlockMetadata = $this->metadata->getBlockData($this->blockName);
-        $this->dataValidator->setData($this->dataFromRequest, $this->blockName);
+        $this->dataValidator->setData($this->dataFromRequest, $this->currentBlockMetadata);
     }
 
     /**
@@ -96,28 +96,37 @@ class Manager
     }
 
     /**
-     * @param string $url       Endpoint URL
-     * @param array  $headers   Array of headers
-     * @param array  $urlParams Data that will be in ULR
-     * @param array  $params    Data that will be in request body
      * @return array
      */
-    public function createGuzzleData($url, $headers, $urlParams, $params)
+    public function getBlockMetadata(): array
     {
-        $method = $this->currentBlockMetadata['method'];
+        return $this->currentBlockMetadata;
+    }
+
+    /**
+     * @param string $url Endpoint URL
+     * @param array $headers Array of headers
+     * @param array $urlParams Data that will be in ULR
+     * @param array $bodyParams Data that will be in request body
+     * @return array
+     */
+    public function createGuzzleData($url, $headers, $urlParams, $bodyParams)
+    {
+        $method = $this->currentBlockMetadata['custom']['method'];
         $type = $this->getRequestType();
-        return $this->generator->createGuzzleData($url, $headers, $urlParams, $params, $method, $type);
+
+        return $this->generator->createGuzzleData($url, $headers, $urlParams, $bodyParams, $method, $type);
     }
 
     /**
      * Remove replaced params from data
-     * @param array  $data Parsed data from request (not the same as urlParams. This is params. Used to replace {example} in url from metadata)
-     * @param string $url  Hardcode part of url, if needed (if u use part of url in metadata)
+     * @param array $data Parsed data from request (not the same as urlParams. This is params. Used to replace {example} in url from metadata)
+     * @param string $url Hardcode part of url, if needed (if u use part of url in metadata)
      * @return string
      */
     public function createFullUrl(&$data, $url = '')
     {
-        return $this->generator->createFullUrl($data, $this->currentBlockMetadata['url'], $url);
+        return $this->generator->createFullUrl($data, $this->currentBlockMetadata['custom']['url'], $url);
     }
 
     /**
@@ -125,8 +134,8 @@ class Manager
      */
     private function getRequestType()
     {
-        if (isset($this->currentBlockMetadata['type'])) {
-            $type = mb_strtoupper($this->currentBlockMetadata['type']);
+        if (isset($this->currentBlockMetadata['custom']['type'])) {
+            $type = mb_strtoupper($this->currentBlockMetadata['custom']['type']);
         } else {
             $type = 'JSON';
         }

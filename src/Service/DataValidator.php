@@ -28,6 +28,10 @@ class DataValidator
 
     protected $typeValidator;
 
+    /**
+     * DataValidator constructor.
+     * @param TypeValidator $typeValidator
+     */
     public function __construct(TypeValidator $typeValidator)
     {
         $this->typeValidator = $typeValidator;
@@ -52,10 +56,10 @@ class DataValidator
     /**
      * @return array
      */
-    public function getValidData(): array
-    {
-        return $this->parsedValidData;
-    }
+//    public function getValidData(): array
+//    {
+//        return $this->parsedValidData;
+//    }
 
     /**
      * @return array
@@ -70,23 +74,32 @@ class DataValidator
      */
     public function getUrlParams(): array
     {
-//        return $this->urlParams;
         return $this->typeValidator->getUrlParams();
     }
 
     public function getBodyParams(): array
     {
-//        return $this->bodyParams;
         return $this->typeValidator->getBodyParams();
     }
 
-    protected function isMultipart() {
-        if (!empty($this->blockMetadata['custom']['type']) && mb_strtolower($this->blockMetadata['custom']['type']) == 'multipart') {
+    /**
+     * @return bool
+     */
+    protected function isMultipart(): bool
+    {
+        if (!empty($this->blockMetadata['custom']['type']) && mb_strtolower(
+                $this->blockMetadata['custom']['type']
+            ) == 'multipart'
+        ) {
             return true;
         }
+
         return false;
     }
 
+    /**
+     *
+     */
     protected function checkGroupValidation()
     {
         if (!empty($this->blockMetadata['custom']['groups'])) {
@@ -99,7 +112,11 @@ class DataValidator
         }
     }
 
-    protected function checkGroup($group)
+    /**
+     * @param $group
+     * @return bool
+     */
+    protected function checkGroup($group): bool
     {
         $result = $group['required'] == "all" ? true : false;
         foreach ($group['args'] as $arg) {
@@ -117,22 +134,33 @@ class DataValidator
                 }
             }
         }
+
         return $result;
     }
 
-    protected function isNotEmptyParamByName($paramName)
+    /**
+     * @param $paramName
+     * @return bool
+     */
+    protected function isNotEmptyParamByName($paramName): bool
     {
         $paramData = $this->findInArgs($paramName);
+
         return $this->checkNotEmptyParam($paramData);
     }
 
-    protected function findInArgs($paramName)
+    /**
+     * @param $paramName
+     * @return array
+     */
+    protected function findInArgs($paramName): array
     {
         foreach ($this->blockMetadata['args'] as $arg) {
             if ($arg['name'] == $paramName) {
                 return $arg;
             }
         }
+
         return [];
     }
 
@@ -155,7 +183,11 @@ class DataValidator
         $this->checkGroupError();
     }
 
-    protected function checkBlockErrors() {
+    /**
+     * @throws PackageException
+     */
+    protected function checkBlockErrors()
+    {
         if (!isset($this->blockMetadata['custom']['url'])) {
             throw new PackageException("Cant find vendor's endpoint", PackageException::URL_CODE);
         }
@@ -164,19 +196,34 @@ class DataValidator
         }
     }
 
-    protected function checkRequiredFieldError() {
+    /**
+     * @throws RequiredFieldException
+     */
+    protected function checkRequiredFieldError()
+    {
         if (!empty($this->requiredFieldError)) {
             throw new RequiredFieldException(implode(',', $this->requiredFieldError));
         }
     }
 
-    protected function checkParsedFieldError() {
+    /**
+     * @throws PackageException
+     */
+    protected function checkParsedFieldError()
+    {
         if (!empty($this->parsedFieldError)) {
-            throw new PackageException("Parse error in: " . implode(',', $this->parsedFieldError), PackageException::JSON_VALIDATION_CODE);
+            throw new PackageException(
+                "Parse error in: ".implode(',', $this->parsedFieldError),
+                PackageException::JSON_VALIDATION_CODE
+            );
         }
     }
 
-    protected function checkGroupError() {
+    /**
+     * @throws RequiredFieldException
+     */
+    protected function checkGroupError()
+    {
         if (!empty($this->groupError)) {
             $message = "Follow group validation rules: ";
             foreach ($this->groupError as $group) {
@@ -187,7 +234,12 @@ class DataValidator
         }
     }
 
-    protected function createGroupErrorMessage($group, $glue)
+    /**
+     * @param $group
+     * @param $glue
+     * @return string
+     */
+    protected function createGroupErrorMessage($group, $glue): string
     {
         $message = '';
         if (!$this->isMultiDimensionalArray($group['args'])) {
@@ -195,26 +247,35 @@ class DataValidator
         } else {
             foreach ($group['args'] as $arg) {
                 if (!is_array($arg)) {
-                    $message .= $arg . $glue;
+                    $message .= $arg.$glue;
                 } else {
                     $glue = $arg['required'] == "all" ? " AND " : " OR ";
-                    $message .= "(" . $this->createGroupErrorMessage($arg, $glue) . ")";
+                    $message .= "(".$this->createGroupErrorMessage($arg, $glue).")";
                 }
             }
         }
+
         return $message;
     }
 
-    public function isMultiDimensionalArray($array)
+    /**
+     * @param $array
+     * @return bool
+     */
+    public function isMultiDimensionalArray($array): bool
     {
         foreach ($array as $value) {
             if (is_array($value)) {
                 return true;
             }
         }
+
         return false;
     }
 
+    /**
+     * @param $paramData
+     */
     protected function parseRequiredDataFromRequest($paramData)
     {
         if ($this->checkNotEmptyParam($paramData)) {
@@ -224,7 +285,11 @@ class DataValidator
         }
     }
 
-    protected function checkNotEmptyParam($paramData)
+    /**
+     * @param $paramData
+     * @return bool
+     */
+    protected function checkNotEmptyParam($paramData): bool
     {
         $name = $paramData['name'];
         $type = mb_strtolower($paramData['type']);
@@ -238,9 +303,13 @@ class DataValidator
                 return true;
             }
         }
+
         return false;
     }
 
+    /**
+     * @param $paramData
+     */
     protected function parseSingleDataFromRequest($paramData)
     {
         $name = $paramData['name'];
@@ -248,12 +317,12 @@ class DataValidator
         $paramType = mb_strtolower($paramData['type']);
         $value = $this->getValueFromRequestData($name);
         if ($this->checkNotEmptyParam($paramData)) {
-            if (!empty($paramData['custom']['urlParam'])) {
-
-            }
-            else {
-                $this->typeValidator->save($paramData, $value, $vendorName, $paramType);
-            }
+//            if (!empty($paramData['custom']['urlParam'])) {
+//
+//            }
+//            else {
+            $this->typeValidator->save($paramData, $value, $vendorName, $paramType);
+//            }
         }
     }
 
@@ -275,6 +344,10 @@ class DataValidator
         }
     }
 
+    /**
+     * @param array $paramData
+     * @return bool
+     */
     protected function toSnakeCase(array $paramData): bool
     {
         $result = false;
@@ -289,12 +362,16 @@ class DataValidator
         return $result;
     }
 
-
+    /**
+     * @param $paramName
+     * @return null
+     */
     protected function getValueFromRequestData($paramName)
     {
         if (isset($this->dataFromRequest['args'][$paramName])) {
             return $this->dataFromRequest['args'][$paramName];
         }
+
         return null;
     }
 }

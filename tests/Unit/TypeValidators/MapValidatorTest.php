@@ -7,7 +7,7 @@
  * Time: 17:16
  */
 
-namespace RapidAPI\Tests\TypeValidators;
+namespace RapidAPI\Tests\Unit\TypeValidators;
 
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\TypeValidators\MapValidator;

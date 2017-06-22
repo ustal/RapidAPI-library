@@ -11,7 +11,7 @@ namespace RapidAPI\Service\TypeValidators;
 
 use RapidAPI\Exception\PackageException;
 
-class DatePickerValidator extends AbstractValidator implements TypeValidatorInterface
+class DatePickerValidator implements TypeValidatorInterface
 {
 
     /**

@@ -12,6 +12,7 @@
     <filter>
         <blacklist>
             <directory suffix=".php">./vendor</directory>
+            <file>/src/Service/Sender.php</file>
         </blacklist>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>

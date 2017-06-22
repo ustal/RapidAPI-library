@@ -9,7 +9,7 @@
 namespace RapidAPI\Service\TypeValidators;
 
 
-class NumberValidator extends AbstractValidator implements TypeValidatorInterface
+class NumberValidator implements TypeValidatorInterface
 {
     public function parse($paramData, $value, $vendorName, $multipart=false)
     {

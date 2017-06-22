@@ -8,13 +8,19 @@
 
 namespace RapidAPI\Service\TypeValidators;
 
-
+/**
+ * Class FileValidator
+ * @package RapidAPI\Service\TypeValidators
+ * @codeCoverageIgnore
+ */
 class FileValidator extends JSONValidator
 {
     public function parse($paramData, $value, $vendorName, $multipart=false)
     {
         if (!empty($paramData['custom']['jsonParse'])) {
             $content = file_get_contents($value);
+            // todo check is content exist and not error
+            $content = json_decode($content, true);
 //            parent::save($paramData, $content, $vendorName);
         } else {
             if ($multipart) {

@@ -6,7 +6,7 @@
  * Time: 17:26
  */
 
-namespace RapidAPI\Tests\TypeValidators;
+namespace RapidAPI\Tests\Unit\TypeValidators;
 
 
 use PHPUnit\Framework\TestCase;

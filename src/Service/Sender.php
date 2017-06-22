@@ -13,6 +13,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class Sender
+ * @package RapidAPI\Service
+ * @codeCoverageIgnore
+ */
 class Sender
 {
     public function send($data)

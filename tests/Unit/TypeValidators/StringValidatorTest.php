@@ -7,33 +7,32 @@
  * Time: 17:16
  */
 
-namespace RapidAPI\Tests\TypeValidators;
+namespace RapidAPI\Tests\Unit\TypeValidators;
 
 use PHPUnit\Framework\TestCase;
-use RapidAPI\Service\TypeValidators\NumberValidator;
 use RapidAPI\Service\TypeValidators\StringValidator;
 
-class NumberValidatorTest extends TestCase
+class StringValidatorTest extends TestCase
 {
-    /** @var NumberValidator */
+    /** @var StringValidator */
     private $validator;
 
     public function setUp()
     {
-        $this->validator = new NumberValidator();
+        $this->validator = new StringValidator();
     }
 
     public function testParse()
     {
         $vendorName = "testName";
-        $value = "1";
+        $value = "test Value";
         $paramData = [
             "name" => "testName",
-            "type" => "Number",
+            "type" => "String",
             "info" => "Some info",
             "required" => true
         ];
         $result = $this->validator->parse($paramData, $value, $vendorName);
-        $this->assertEquals(1, $result);
+        $this->assertEquals('test Value', $result);
     }
 }

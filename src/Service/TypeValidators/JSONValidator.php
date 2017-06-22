@@ -11,7 +11,7 @@ namespace RapidAPI\Service\TypeValidators;
 
 use RapidAPI\Exception\PackageException;
 
-class JSONValidator extends AbstractValidator implements TypeValidatorInterface
+class JSONValidator implements TypeValidatorInterface
 {
     public function parse($paramData, $value, $vendorName, $multipart=false)
     {

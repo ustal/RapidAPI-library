@@ -12,6 +12,7 @@ namespace RapidAPI\Tests;
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\DataValidator;
 use RapidAPI\Service\Metadata;
+use RapidAPI\Service\TypeValidators\TypeValidator;
 
 class ValidatorGroupTest extends TestCase
 {
@@ -25,7 +26,8 @@ class ValidatorGroupTest extends TestCase
     {
         $this->metadata = new Metadata();
         $this->metadata->set(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'metadata.json');
-        $this->validator = new DataValidator();
+        $typeValidator = new TypeValidator();
+        $this->validator = new DataValidator($typeValidator);
     }
 
     /**

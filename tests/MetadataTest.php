@@ -709,6 +709,62 @@ class MetadataTest extends TestCase
                                 "info" => "Success"
                             ]
                         ]
+                    ],
+                    [
+                        "name" => "testUrlGenerator",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "postId",
+                                "type" => "Number",
+                                "info" => "",
+                                "required" => true
+                            ],
+                            [
+                                "name" => "testValue",
+                                "type" => "String",
+                                "info" => "",
+                                "required" => true
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
+                    ],
+                    [
+                        "name" => "testCreateGuzzleMultipart",
+                        "description" => "",
+                        "args" => [
+                            [
+                                "name" => "postId",
+                                "type" => "Number",
+                                "info" => "",
+                                "required" => true
+                            ],
+                            [
+                                "name" => "testValue",
+                                "type" => "String",
+                                "info" => "",
+                                "required" => true
+                            ]
+                        ],
+                        "callbacks" => [
+                            [
+                                "name" => "error",
+                                "info" => "Error"
+                            ],
+                            [
+                                "name" => "success",
+                                "info" => "Success"
+                            ]
+                        ]
                     ]
                 ],
         ];
@@ -914,7 +970,106 @@ class MetadataTest extends TestCase
                     ]
                 ]
         ];
+        $expect = [
+            'name' => 'testBlock1',
+            'description' => 'This endpoint allows to receive weather information.',
+            'args' =>
+                [
+                    [
+                        'name' => 'testCredentials',
+                        'type' => 'credentials',
+                        'info' => 'test credentials info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testString',
+                        'type' => 'String',
+                        'info' => 'test string info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testNumber',
+                        'type' => 'Number',
+                        'info' => 'test number info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testBoolean',
+                        'type' => 'Boolean',
+                        'info' => 'test boolean info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testMap',
+                        'type' => 'Map',
+                        'info' => 'test map info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testSelect',
+                        'type' => 'Select',
+                        'options' =>
+                            [
+                                'value1',
+                                'value2',
+                            ],
+                        'info' => 'test select info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testDatePicker',
+                        'type' => 'DatePicker',
+                        'info' => 'test datepicker info',
+                        'required' => true,
+                    ],
+                    [
+                        'name' => 'testList',
+                        'type' => 'List',
+                        'info' => 'test list info',
+                        'required' => true,
+                        'structure' =>
+                            [
+                                'name' => 'testListId',
+                                'type' => 'String',
+                                'info' => 'some child info',
+                            ],
+                    ],
+                    [
+                        'name' => 'testArray',
+                        'type' => 'Array',
+                        'info' => 'test array info',
+                        'required' => true,
+                        'structure' =>
+                            [
+
+                                [
+                                    'name' => 'testArrayId',
+                                    'type' => 'Number',
+                                    'info' => 'some child info part 1',
+                                ],
+                                [
+                                    'name' => 'testArrayName',
+                                    'type' => 'String',
+                                    'info' => 'some child info part 2',
+                                ],
+                            ],
+                    ],
+                ],
+            'callbacks' =>
+                [
+                    [
+                        'name' => 'error',
+                        'info' => 'Error',
+                    ],
+                    [
+                        'name' => 'success',
+                        'info' => 'Success',
+                    ],
+                ],
+        ];
         $this->metadata->set($data);
+        $blockData = $this->metadata->getBlockData('testBlock1');
+        $this->assertEquals($expect, $blockData);
     }
 
     /**
