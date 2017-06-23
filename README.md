@@ -4,6 +4,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/ustal/rapidapi-library/v/unstable)](https://packagist.org/packages/ustal/rapidapi-library)
 [![License](https://poser.pugx.org/ustal/rapidapi-library/license)](https://packagist.org/packages/ustal/rapidapi-library)
 [![codecov](https://codecov.io/gh/ustal/RapidAPI-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ustal/RapidAPI-library)
+
 #### Manual
 Вызываем менеджер
 `$manager = $this->get('manager');`
