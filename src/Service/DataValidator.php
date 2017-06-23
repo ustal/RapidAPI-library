@@ -64,10 +64,10 @@ class DataValidator
     /**
      * @return array
      */
-    public function getBlockMetadata(): array
-    {
-        return $this->blockMetadata;
-    }
+//    public function getBlockMetadata(): array
+//    {
+//        return $this->blockMetadata;
+//    }
 
     /**
      * @return array
