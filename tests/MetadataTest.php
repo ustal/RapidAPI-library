@@ -572,21 +572,7 @@ class MetadataTest extends TestCase
                                 "name" => "dateTest",
                                 "type" => "DatePicker",
                                 "info" => "",
-                                "required" => false,
-                                "structure" => [
-                                    [
-                                        "name" => "type",
-                                        "type" => "String",
-                                        "info" => "",
-                                        "required" => true
-                                    ],
-                                    [
-                                        "name" => "someValue",
-                                        "type" => "String",
-                                        "info" => "",
-                                        "required" => true
-                                    ]
-                                ]
+                                "required" => false
                             ]
                         ],
                         "callbacks" => [

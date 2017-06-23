@@ -19,7 +19,7 @@ class DatePickerValidatorTest extends TestCase
 
     private $value = '2017-10-30 12:13:15';
 
-    private $valueTimeStamp = '1497953340';
+    private $valueTimeStamp = '1509365595';
 
     public function setUp()
     {
@@ -33,11 +33,106 @@ class DatePickerValidatorTest extends TestCase
             "name" => "testName",
             "type" => "DatePicker",
             "info" => "Some info",
-            "required" => true,
+            "required" => true
         ];
         $expect = '2017-10-30 12:13:15';
         $result = $this->validator->parse($paramData, $this->value, $vendorName);
         $this->assertEquals($expect, $result);
+    }
+
+    public function testParseFromTimestamp() {
+        $vendorName = "testName";
+        $paramData = [
+            "name" => "testName",
+            "type" => "DatePicker",
+            "info" => "Some info",
+            "required" => true,
+            "custom" => [
+                "dateTime" => [
+                    "fromFormat" => ['timestamp'],
+                    "toFormat" => "Y-m-d"
+                ],
+            ],
+        ];
+        $expect = '2017-10-30';
+        $result = $this->validator->parse($paramData, $this->valueTimeStamp, $vendorName);
+        $this->assertEquals($expect, $result);
+    }
+
+    public function testParseToNanFormat() {
+        $vendorName = "testName";
+        $paramData = [
+            "name" => "testName",
+            "type" => "DatePicker",
+            "info" => "Some info",
+            "required" => true,
+            "custom" => [
+                "dateTime" => [
+                    "fromFormat" => ['timestamp']
+                ],
+            ],
+        ];
+        $expect = '2017-10-30 12:13:15';
+        $result = $this->validator->parse($paramData, $this->valueTimeStamp, $vendorName);
+        $this->assertEquals($expect, $result);
+    }
+
+    public function testParseToTimestamp() {
+        $vendorName = "testName";
+        $paramData = [
+            "name" => "testName",
+            "type" => "DatePicker",
+            "info" => "Some info",
+            "required" => true,
+            "custom" => [
+                "dateTime" => [
+                    "fromFormat" => ["RAPID"],
+                    "toFormat" => "timestamp"
+                ],
+            ],
+        ];
+        $result = $this->validator->parse($paramData, $this->value, $vendorName);
+        $this->assertEquals($this->valueTimeStamp, $result);
+    }
+
+    public function testParseSameFormats() {
+        $vendorName = "testName";
+        $paramData = [
+            "name" => "testName",
+            "type" => "DatePicker",
+            "info" => "Some info",
+            "required" => true,
+            "custom" => [
+                "dateTime" => [
+                    "fromFormat" => ["RAPID"],
+                    "toFormat" => "RAPID"
+                ],
+            ],
+        ];
+        $result = $this->validator->parse($paramData, $this->value, $vendorName);
+        $this->assertEquals($this->value, $result);
+    }
+
+    /**
+     * @expectedException \RapidAPI\Exception\PackageException
+     * @expectedExceptionCode \RapidAPI\Exception\PackageException::DATETIME_FORMAT_CODE
+     */
+    public function testParseError() {
+        $vendorName = "testName";
+        $paramData = [
+            "name" => "testName",
+            "type" => "DatePicker",
+            "info" => "Some info",
+            "required" => true,
+            "custom" => [
+                "dateTime" => [
+                    "fromFormat" => ["ISO8601"],
+                    "toFormat" => "RAPID"
+                ],
+            ],
+        ];
+        $result = $this->validator->parse($paramData, "false", $vendorName);
+        $this->assertEquals($this->value, $result);
     }
 
     /**
@@ -101,6 +196,6 @@ class DatePickerValidatorTest extends TestCase
             ]
         ];
         $value = '2017-10-30,112:13:15';
-        $result = $this->validator->parse($paramData, $value, $vendorName);
+        $this->validator->parse($paramData, $value, $vendorName);
     }
 }
