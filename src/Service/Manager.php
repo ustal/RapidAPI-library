@@ -32,14 +32,12 @@ class Manager
      * Manager constructor.
      * @param DataValidator $dataValidator
      * @param Metadata $metadata
-     * @param Sender $sender
      * @param Generator $generator
      */
-    public function __construct(DataValidator $dataValidator, Metadata $metadata, Sender $sender, Generator $generator)
+    public function __construct(DataValidator $dataValidator, Metadata $metadata, Generator $generator)
     {
         $this->dataValidator = $dataValidator;
         $this->metadata = $metadata;
-        $this->sender = $sender;
         $this->generator = $generator;
     }
 

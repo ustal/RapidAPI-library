@@ -14,7 +14,6 @@ use RapidAPI\Service\DataValidator;
 use RapidAPI\Service\Generator;
 use RapidAPI\Service\Manager;
 use RapidAPI\Service\Metadata;
-use RapidAPI\Service\Sender;
 use RapidAPI\Service\TypeValidators\TypeValidator;
 
 class ManagerTest extends TestCase
@@ -27,9 +26,8 @@ class ManagerTest extends TestCase
         $typeValidator = new TypeValidator();
         $dataValidator = new DataValidator($typeValidator);
         $metadata = new Metadata();
-        $sender = new Sender();
         $generator = new Generator();
-        $this->manager = new Manager($dataValidator, $metadata, $sender, $generator);
+        $this->manager = new Manager($dataValidator, $metadata, $generator);
     }
 
     public function test1()
