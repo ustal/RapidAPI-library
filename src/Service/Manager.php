@@ -1,17 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: rapidapi
+ * User: George Cherenkov
  * Date: 14.04.17
  * Time: 14:28
  */
 
 namespace RapidAPI\Service;
-
-
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use RapidAPI\Exception\PackageException;
 
 class Manager
 {
@@ -21,61 +16,128 @@ class Manager
     /** @var Metadata */
     private $metadata;
 
-    /** @var Request */
-    private $request;
+    /** @var Generator */
+    private $generator;
+
+    /** @var string */
+    private $blockName;
 
     /** @var array */
     private $currentBlockMetadata = [];
 
-    public function __construct(DataValidator $dataValidator, Metadata $metadata, RequestStack $requestStack)
+    /** @var array */
+    private $dataFromRequest = [];
+
+    /**
+     * Manager constructor.
+     * @param DataValidator $dataValidator
+     * @param Metadata $metadata
+     * @param Generator $generator
+     */
+    public function __construct(DataValidator $dataValidator, Metadata $metadata, Generator $generator)
     {
         $this->dataValidator = $dataValidator;
-        $this->request = $requestStack->getCurrentRequest();
         $this->metadata = $metadata;
+        $this->generator = $generator;
     }
 
+    /**
+     * Set metadata file or array
+     * @param $metadata
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata->set($metadata);
+    }
+
+    /**
+     * Set parsed data from request (use parser for your framework)
+     * @param array $dataFromRequest
+     */
+    public function setDataFromRequest($dataFromRequest)
+    {
+        $this->dataFromRequest = $dataFromRequest;
+    }
+
+    /**
+     * Set current endpoint
+     * @param $blockName
+     */
     public function setBlockName($blockName)
     {
+        $this->blockName = $blockName;
         $this->currentBlockMetadata = $this->metadata->getBlockData($blockName);
-        $this->dataValidator->setData($this->request, $this->currentBlockMetadata);
     }
 
-    public function getValidData(): array
+    /**
+     * Start parsing data from request by validation rules
+     */
+    public function start()
     {
-        return $this->dataValidator->getValidData();
+        $this->dataValidator->setData($this->dataFromRequest, $this->currentBlockMetadata);
     }
 
+    /**
+     * @return array Data that will be in URL as key=value&key2=value2
+     */
     public function getUrlParams(): array
     {
         return $this->dataValidator->getUrlParams();
     }
 
+    /**
+     * @return array Data that will be in body (json, binary, multipart)
+     */
     public function getBodyParams(): array
     {
         return $this->dataValidator->getBodyParams();
     }
 
-    public function createGuzzleData($url, $headers, $urlParams, $params) {
-        return $this->dataValidator->createGuzzleData($url, $headers, $urlParams, $params);
+    /**
+     * @return array
+     */
+    public function getBlockMetadata(): array
+    {
+        return $this->currentBlockMetadata;
     }
 
+    /**
+     * @param string $url Endpoint URL
+     * @param array $headers Array of headers
+     * @param array $urlParams Data that will be in ULR
+     * @param array $bodyParams Data that will be in request body
+     * @return array
+     */
+    public function createGuzzleData($url, $headers, $urlParams, $bodyParams)
+    {
+        $method = $this->currentBlockMetadata['custom']['method'];
+        $type = $this->getRequestType();
+
+        return $this->generator->createGuzzleData($url, $headers, $urlParams, $bodyParams, $method, $type);
+    }
+
+    /**
+     * Remove replaced params from data
+     * @param array $data Parsed data from request (not the same as urlParams. This is params. Used to replace {example} in url from metadata)
+     * @param string $url Hardcode part of url, if needed (if u use part of url in metadata)
+     * @return string
+     */
     public function createFullUrl(&$data, $url = '')
     {
-        $url = $url . $this->currentBlockMetadata['url'];
-        $res = preg_replace_callback(
-            '/{(\w+)}/',
-            function ($match) use (&$data) {
-                if (!isset($data[$match[1]])) {
-                    throw new PackageException('Cant find variables to URL parse: ' . $match[1]);
-                }
-                $result = $data[$match[1]];
-                unset($data[$match[1]]);
-                if (is_array($result)) {
-                    return str_replace(' ', '', implode(',', $result));
-                }
-                return $result;
-            },
-            $url);
-        return $res;
+        return $this->generator->createFullUrl($data, $this->currentBlockMetadata['custom']['url'], $url);
+    }
+
+    /**
+     * @return string
+     */
+    private function getRequestType()
+    {
+        if (isset($this->currentBlockMetadata['custom']['type'])) {
+            $type = mb_strtoupper($this->currentBlockMetadata['custom']['type']);
+        } else {
+            $type = 'JSON';
+        }
+
+        return $type;
     }
 }

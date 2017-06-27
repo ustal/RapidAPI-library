@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: rapidapi
+ * User: George Cherenkov
  * Date: 14.04.17
  * Time: 13:56
  */
@@ -13,6 +13,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class Sender
+ * @package RapidAPI\Service
+ * @codeCoverageIgnore
+ */
 class Sender
 {
     public function send($data)

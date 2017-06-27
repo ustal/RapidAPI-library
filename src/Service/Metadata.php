@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: rapidapi
+ * User: George Cherenkov
  * Date: 14.04.17
  * Time: 16:49
  */
@@ -61,7 +61,7 @@ class Metadata
         throw new PackageException("Not found description in metadata for current block", PackageException::BLOCK_NOT_EXIST_CODE);
     }
 
-    private function setMetadataFromFile($file) {
+    protected function setMetadataFromFile($file) {
         $metadataStr = file_get_contents($file, 'r');
         if (!$metadataStr) {
             throw new PackageException('Metadata not found');
@@ -73,7 +73,7 @@ class Metadata
         $this->setMetadata($metadata);
     }
 
-    private function setMetadata($metadata) {
+    protected function setMetadata($metadata) {
         $this->metaDataFull = $metadata;
     }
 }

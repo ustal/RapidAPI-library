@@ -1,10 +1,9 @@
-![](https://travis-ci.org/ustal/RapidAPI-library.svg?branch=master)
+[![Build status](https://travis-ci.org/ustal/RapidAPI-library.svg?branch=master)](https://travis-ci.org/ustal/RapidAPI-library)
 [![Latest Stable Version](https://poser.pugx.org/ustal/rapidapi-library/v/stable)](https://packagist.org/packages/ustal/rapidapi-library)
 [![Total Downloads](https://poser.pugx.org/ustal/rapidapi-library/downloads)](https://packagist.org/packages/ustal/rapidapi-library)
 [![Latest Unstable Version](https://poser.pugx.org/ustal/rapidapi-library/v/unstable)](https://packagist.org/packages/ustal/rapidapi-library)
 [![License](https://poser.pugx.org/ustal/rapidapi-library/license)](https://packagist.org/packages/ustal/rapidapi-library)
-[![codecov](https://codecov.io/gh/ustal/RapidAPI-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ustal/RapidAPI-library)
-
+[![codecov](https://codecov.io/gh/ustal/RapidAPI-library/branch/master/graph/badge.svg)](https://codecov.io/gh/ustal/RapidAPI-library/branch/1.2)
 #### Manual
 Вызываем менеджер
 `$manager = $this->get('manager');`
@@ -45,14 +44,16 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 |---------------|---------|-------------|
 | divide        | Boolean | Use with Map. Divide string from marketPlace to List.
 | toFloat       | Boolean | Convert `value` or `list of values` into Float. If u divided Map and vendor wants get float values not strings
-| floatLength   | Number  | Length of float param. Set 1 to convert 123.1111 to 123.1
+| length        | Number  | Length of float or string param. Set 1 to convert 123.1111 to 123.1 or "123.1111" to "123.1"
+
+#### Map (temporary not available)
 | lat           | String  | If divide is true, change list info assocc Array with key = `lat` value
 | lng           | String  | If divide is true, change list info assocc Array with key = `lng` value
 
 #### DatePicker
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| dateTime.fromFormat   | Array   | Create date from one of format. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `unixtime`].
+| dateTime.fromFormat   | Array   | Create date from one of format. Like [`Y-m-d\TH:i:s\Z`, `Y-m-d`, `timestamp`].
 | dateTime.toFormat     | String  | Convert data to current format. Like `Y-m-d\TH:i:s\Z`
 
 #### Boolean
@@ -76,9 +77,7 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 #### Array
 | TagName       | Type    | Description |
 |---------------|---------|-------------|
-| complex       | Boolean | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
-| keyName       | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
-| valueName     | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+| keyValue      | Array   | Use to create key=>value from array with params key and value.
 | keyValue.key  | String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value. 
 | keyValue.value| String  | Work only with Arrays. Create `key->value` array from multi-dimensional array. Set one of the structure parameters as the key. Do the same with the value.
 
@@ -98,6 +97,24 @@ $result = $manager->send($url, $urlParams, $bodyParams, $headers);
 | vendorName    | String  | имя аргумента, которое хочет получить вендор. Если не указано, вендор получит имя аргумента в snake case.|
 | urlParam      | Boolean | параметр используется в ссылке. В ссылке никаких {var=value&foo=bar} не надо. Просто эта переменная (по name или vendorName) будет добавлена со своим значением к ссылке. Использовать с GET параметром не надо. Параметры автоматически будут переданы в url|
 | snakeCase     | Boolean | true/false. Если стоит true, даже если у блока стоит false, переменная будет преобразована в camel_case|
+| complex       | Array   | сложный параметр. Когда значение одного поля является ключ, другого - значение. Например когда хотят получить {type: email, value: {value}}. Соотв будет только одно поле email и его значение {value}. Но добавится параметр complex: true|
+| complex.key   | String  | имя для ключа. В примере выше это будет "type". Используется когда complex: true|
+| complex.value | String  | имя для значения. В примере выше это будет "value". Используется когда complex: true|
+
+#### Пример комплекса
+```
+{"contacts":
+    [
+    "type": "facebook",
+    "value": {value}
+    ],
+    [
+    "type": "twitter",
+    "value": {value}
+    ]
+}
+
+```
 
 Первый пример (мультипарт)
 POST https://your-domain-name.example.com/forum/1/category/2/newPost?insertPostSafeAndWhatEver=1&draft=true

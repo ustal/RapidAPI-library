@@ -11,6 +11,7 @@ namespace RapidAPI\Tests;
 use PHPUnit\Framework\TestCase;
 use RapidAPI\Service\DataValidator;
 use RapidAPI\Service\Metadata;
+use RapidAPI\Service\TypeValidators\TypeValidator;
 
 /**
  * Class ValidatorTest
@@ -29,7 +30,8 @@ class ValidatorTest extends TestCase
     {
         $this->metadata = new Metadata();
         $this->metadata->set(__DIR__ . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'metadata.json');
-        $this->validator = new DataValidator();
+        $typeValidator = new TypeValidator();
+        $this->validator = new DataValidator($typeValidator);
     }
 
     /**
@@ -166,7 +168,7 @@ class ValidatorTest extends TestCase
                     "testString" => "asdad",
                     "testNumber" => 100,
                     "testBoolean" => true,
-                    "testMap" => "50.123, 12.12313",
+                    "testMap" => "50.123,12.12313",
                     "testSelect" => "value1",
                     "testDatePicker" => "2017-01-01 00:00:01",
                     "testList" => [
@@ -225,7 +227,7 @@ class ValidatorTest extends TestCase
                     "test_string" => "asdad",
                     "testNumber" => 100,
                     "test_boolean" => 1,
-                    "test_map" => "50.123, 12.12313",
+                    "test_map" => "50.123,12.12313",
                     "test_select" => "value1",
                     "test_date_picker" => "2017-01-01 00:00:01",
                     "test_list" => [

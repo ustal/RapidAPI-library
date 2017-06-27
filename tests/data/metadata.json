@@ -671,20 +671,6 @@
           "type": "DatePicker",
           "info": "",
           "required": false,
-          "structure": [
-            {
-              "name": "type",
-              "type": "String",
-              "info": "",
-              "required": true
-            },
-            {
-              "name": "someValue",
-              "type": "String",
-              "info": "",
-              "required": true
-            }
-          ],
           "custom": {
             "dateTime": {
               "fromFormat": [
@@ -836,6 +822,71 @@
           "type": "Map",
           "info": "",
           "required": false
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "testUrlGenerator",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com/post/{postId}"
+      },
+      "args": [
+        {
+          "name": "postId",
+          "type": "Number",
+          "info": "",
+          "required": true
+        },
+        {
+          "name": "testValue",
+          "type": "String",
+          "info": "",
+          "required": true
+        }
+      ],
+      "callbacks": [
+        {
+          "name": "error",
+          "info": "Error"
+        },
+        {
+          "name": "success",
+          "info": "Success"
+        }
+      ]
+    },
+    {
+      "name": "testCreateGuzzleMultipart",
+      "description": "",
+      "custom": {
+        "method": "POST",
+        "url": "http://example.com/post/{postId}",
+        "type": "multipart"
+      },
+      "args": [
+        {
+          "name": "postId",
+          "type": "Number",
+          "info": "",
+          "required": true
+        },
+        {
+          "name": "testValue",
+          "type": "String",
+          "info": "",
+          "required": true
         }
       ],
       "callbacks": [
